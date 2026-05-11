@@ -1,0 +1,121 @@
+export * from './colors';
+export * from './spacing';
+export * from './typography';
+export * from './radii';
+export * from './shadows';
+
+export const theme = {
+  colors: {
+    primary: {
+      gold: '#D4AF37',
+      orange: '#FF8C00',
+      light: '#FFE4B5',
+      dark: '#B8860B',
+    },
+    neutral: {
+      50: '#FAFAFA',
+      100: '#F5F5F5',
+      200: '#EEEEEE',
+      300: '#E0E0E0',
+      400: '#BDBDBD',
+      500: '#9E9E9E',
+      600: '#757575',
+      700: '#616161',
+      800: '#424242',
+      900: '#212121',
+    },
+    white: '#FFFFFF',
+    black: '#000000',
+    success: '#4CAF50',
+    error: '#F44336',
+    warning: '#FF9800',
+    info: '#2196F3',
+  },
+  spacing: {
+    0: 0,
+    0.5: 2,
+    1: 4,
+    2: 8,
+    3: 12,
+    4: 16,
+    5: 20,
+    6: 24,
+    8: 32,
+    10: 40,
+    12: 48,
+    16: 64,
+    20: 80,
+    24: 96,
+    32: 128,
+  },
+  typography: {
+    fontFamily: {
+      regular: 'Poppins-Regular',
+      medium: 'Poppins-Medium',
+      semiBold: 'Poppins-SemiBold',
+      bold: 'Poppins-Bold',
+    },
+    fontSize: {
+      xs: 12,
+      sm: 14,
+      base: 16,
+      lg: 18,
+      xl: 20,
+      '2xl': 24,
+      '3xl': 30,
+      '4xl': 36,
+      '5xl': 48,
+      '6xl': 60,
+    },
+    fontWeight: {
+      normal: '400',
+      medium: '500',
+      semiBold: '600',
+      bold: '700',
+    },
+    lineHeight: {
+      tight: 1.2,
+      normal: 1.5,
+      relaxed: 1.75,
+    },
+  },
+  radii: {
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 32,
+    full: 9999,
+  },
+  shadows: {
+    sm: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.05,
+      shadowRadius: 2,
+      elevation: 1,
+    },
+    md: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 6,
+      elevation: 4,
+    },
+    lg: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.1,
+      shadowRadius: 15,
+      elevation: 10,
+    },
+    xl: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 20 },
+      shadowOpacity: 0.1,
+      shadowRadius: 25,
+      elevation: 20,
+    },
+  },
+} as const;
