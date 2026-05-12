@@ -41,13 +41,13 @@ export default function OpenLoansScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: spacing[6] }}>
         <Pressable onPress={() => router.back()} style={{ marginBottom: spacing[4] }}>
           <Text style={{ fontSize: 16, color: colors.primary.gold, fontWeight: '600' }}>
-            ← Back
+            ← Back  
           </Text>
         </Pressable>
 
         <View style={{ marginBottom: spacing[6] }}>
           <Text style={{ fontSize: 28, fontWeight: '700', color: colors.neutral[900], marginBottom: spacing[1] }}>
-            Open Loans
+            Open Loans  
           </Text>
           <Text style={{ fontSize: 16, color: colors.neutral[600] }}>
             {openLoans.length} active loan{openLoans.length !== 1 ? 's' : ''}
@@ -64,7 +64,7 @@ export default function OpenLoansScreen() {
               <Pressable onPress={() => router.push(`/loans/${loan.ID}`)}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[2] }}>
                   <Text style={{ fontSize: 16, fontWeight: '600', color: colors.neutral[900] }}>
-                    {loan.LoanNo}
+                    {loan.LoanNo}  
                   </Text>
                   <View style={{
                     paddingHorizontal: spacing[2],
@@ -77,26 +77,26 @@ export default function OpenLoansScreen() {
                       fontWeight: '600',
                       color: colors.success[700]
                     }}>
-                      {loan.LoanStatus}
+                      {loan.LoanStatus}  
                     </Text>
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[2] }}>
                   <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Loan Amount</Text>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-                    ₹{parseFloat(loan.LoanAmount || '0').toLocaleString('en-IN')}
+                    ₹{parseFloat(loan.LoanAmount || '0').toLocaleString('en-IN')}  
                   </Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[2] }}>
                   <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Total Due</Text>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-                    ₹{parseFloat(loan.TotalDueAmount || '0').toLocaleString('en-IN')}
+                    ₹{parseFloat(loan.TotalDueAmount || '0').toLocaleString('en-IN')}  
                   </Text>
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Pending</Text>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: colors.primary.gold }}>
-                    ₹{parseFloat(loan.PendingLoanAmount || '0').toLocaleString('en-IN')}
+                    ₹{parseFloat(loan.PendingLoanAmount || '0').toLocaleString('en-IN')}  
                   </Text>
                 </View>
               </Pressable>

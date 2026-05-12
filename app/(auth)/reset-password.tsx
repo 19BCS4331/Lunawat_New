@@ -33,8 +33,6 @@ export default function ResetPasswordScreen() {
   const language = useAppStore((s) => s.language);
   const setLanguage = useAppStore((s) => s.setLanguage);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
-  const [confirmPasswordFocused, setConfirmPasswordFocused] = useState(false);
 
   // Set userId from route params on mount
   useEffect(() => {
@@ -82,7 +80,7 @@ export default function ResetPasswordScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="language-outline" size={18} color={colors.primary.dark} />
-            <Text style={styles.langBtnText}>{language.toUpperCase()}</Text>
+            <Text style={styles.langBtnText}>{language.toUpperCase() + ' '}</Text>
           </TouchableOpacity>
 
           {/* Back Button */}
@@ -99,14 +97,14 @@ export default function ResetPasswordScreen() {
             <View style={styles.logoMark}>
               <Image source={require('../../assets/SLF_New_Logo_PNG.png')} style={styles.logoImage} />
             </View>
-            <Text style={styles.brandName}>S Lunawat Finance</Text>
-            <Text style={styles.brandTagline}>Your Trusted Lending Partner</Text>
+            <Text style={styles.brandName}>S Lunawat Finance   </Text>
+            <Text style={styles.brandTagline}>Your Trusted Lending Partner   </Text>
           </View>
 
           {/* Card */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{t('resetPassword.title')}</Text>
-            <Text style={styles.cardSubtitle}>{t('resetPassword.subtitle')}</Text>
+            <Text style={styles.cardTitle}>{t('resetPassword.title') + ' '}</Text>
+            <Text style={styles.cardSubtitle}>{t('resetPassword.subtitle') + ' '}</Text>
 
             {/* User ID Input - Read-only */}
             <Controller
@@ -114,7 +112,7 @@ export default function ResetPasswordScreen() {
               name="userId"
               render={({ field: { value } }) => (
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.inputLabel}>{t('resetPassword.userId')}</Text>
+                  <Text style={styles.inputLabel}>{t('resetPassword.userId') + ' '}</Text>
                   <View style={[styles.inputContainer, styles.inputContainerDisabled]}>
                     <Text style={styles.textInputDisabled}>{value}</Text>
                   </View>
@@ -126,24 +124,22 @@ export default function ResetPasswordScreen() {
             <Controller
               control={control}
               name="newPassword"
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.inputLabel}>{t('resetPassword.newPassword')}</Text>
-                  <View style={[styles.inputContainer, passwordFocused && styles.inputContainerFocused, !!errors.newPassword && styles.inputContainerError]}>
+                  <Text style={styles.inputLabel}>{t('resetPassword.newPassword') + ' '}</Text>
+                  <View style={[styles.inputContainer, !!errors.newPassword && styles.inputContainerError]}>
                     <TextInput
                       style={styles.textInput}
-                      placeholder={t('resetPassword.newPasswordPlaceholder')}
+                      placeholder={t('resetPassword.newPasswordPlaceholder') + ' '}
                       placeholderTextColor={colors.neutral[400]}
                       secureTextEntry
                       value={value}
                       onChangeText={onChange}
-                      onFocus={() => setPasswordFocused(true)}
-                      onBlur={() => { setPasswordFocused(false); onBlur(); }}
                       selectionColor={colors.primary.gold}
                     />
                   </View>
                   {!!errors.newPassword && (
-                    <Text style={styles.errorText}>{errors.newPassword.message}</Text>
+                    <Text style={styles.errorText}>{errors.newPassword.message} </Text>
                   )}
                 </View>
               )}
@@ -153,24 +149,22 @@ export default function ResetPasswordScreen() {
             <Controller
               control={control}
               name="confirmPassword"
-              render={({ field: { onChange, onBlur, value } }) => (
+              render={({ field: { onChange, value } }) => (
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.inputLabel}>{t('resetPassword.confirmPassword')}</Text>
-                  <View style={[styles.inputContainer, confirmPasswordFocused && styles.inputContainerFocused, !!errors.confirmPassword && styles.inputContainerError]}>
+                  <Text style={styles.inputLabel}>{t('resetPassword.confirmPassword') + ' '}</Text>
+                  <View style={[styles.inputContainer, !!errors.confirmPassword && styles.inputContainerError]}>
                     <TextInput
                       style={styles.textInput}
-                      placeholder={t('resetPassword.confirmPasswordPlaceholder')}
+                      placeholder={t('resetPassword.confirmPasswordPlaceholder') + ' '}
                       placeholderTextColor={colors.neutral[400]}
                       secureTextEntry
                       value={value}
                       onChangeText={onChange}
-                      onFocus={() => setConfirmPasswordFocused(true)}
-                      onBlur={() => { setConfirmPasswordFocused(false); onBlur(); }}
                       selectionColor={colors.primary.gold}
                     />
                   </View>
                   {!!errors.confirmPassword && (
-                    <Text style={styles.errorText}>{errors.confirmPassword.message}</Text>
+                    <Text style={styles.errorText}>{errors.confirmPassword.message}  </Text>
                   )}
                 </View>
               )}
@@ -186,14 +180,14 @@ export default function ResetPasswordScreen() {
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>{t('resetPassword.resetPassword')}</Text>
+                <Text style={styles.primaryButtonText}>{t('resetPassword.resetPassword') + ' '}</Text>
               )}
             </TouchableOpacity>
           </View>
 
           {/* Footer */}
           <Text style={styles.footerText}>
-            {t('loginScreen.securedEncryption')}
+            {t('loginScreen.securedEncryption') + ' '}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -211,7 +205,7 @@ export default function ResetPasswordScreen() {
           onPress={() => setShowLanguageModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('settings.language')}</Text>
+            <Text style={styles.modalTitle}>{t('settings.language')+ ' '}</Text>
             <View style={styles.langRow}>
               {(['en', 'hi', 'mr'] as const).map((l) => (
                 <TouchableOpacity
@@ -221,7 +215,7 @@ export default function ResetPasswordScreen() {
                   activeOpacity={0.75}
                 >
                   <Text style={[styles.langChipText, language === l && styles.langChipTextActive]}>
-                    {l.toUpperCase()}
+                    {l.toUpperCase() + ' '}
                   </Text>
                 </TouchableOpacity>
               ))}

@@ -32,7 +32,6 @@ export default function VerifyOtpScreen() {
   const language = useAppStore((s) => s.language);
   const setLanguage = useAppStore((s) => s.setLanguage);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
-  const [otpFocused, setOtpFocused] = useState(false);
 
   const onSubmit = async (data: { otp: string }) => {
     if (isPasswordResetFlow && userId) {
@@ -76,7 +75,7 @@ export default function VerifyOtpScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="language-outline" size={18} color={colors.primary.dark} />
-            <Text style={styles.langBtnText}>{language.toUpperCase()}</Text>
+            <Text style={styles.langBtnText}>{language.toUpperCase() + ' '}</Text>
           </TouchableOpacity>
 
           {/* Back Button */}
@@ -93,13 +92,13 @@ export default function VerifyOtpScreen() {
             <View style={styles.logoMark}>
               <Image source={require('../../assets/SLF_New_Logo_PNG.png')} style={styles.logoImage} />
             </View>
-            <Text style={styles.brandName}>S Lunawat Finance</Text>
-            <Text style={styles.brandTagline}>Your Trusted Lending Partner</Text>
+            <Text style={styles.brandName}>S Lunawat Finance   </Text>
+            <Text style={styles.brandTagline}>Your Trusted Lending Partner   </Text>
           </View>
 
           {/* Card */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{t('verifyOtp.title')}</Text>
+            <Text style={styles.cardTitle}>{t('verifyOtp.title') + ' '}</Text>
             <Text style={styles.cardSubtitle}>
               {isPasswordResetFlow 
                 ? t('verifyOtp.subtitleReset') 
@@ -112,23 +111,22 @@ export default function VerifyOtpScreen() {
               name="otp"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.inputLabel}>{t('verifyOtp.otp')}</Text>
-                  <View style={[styles.inputContainer, otpFocused && styles.inputContainerFocused, !!errors.otp && styles.inputContainerError]}>
+                  <Text style={styles.inputLabel}>{t('verifyOtp.otp') + ' '}</Text>
+                  <View style={[styles.inputContainer, !!errors.otp && styles.inputContainerError]}>
                     <TextInput
                       style={styles.textInput}
-                      placeholder={t('verifyOtp.enterOtp')}
+                      placeholder={t('verifyOtp.enterOtp') + ' '}
                       placeholderTextColor={colors.neutral[400]}
                       keyboardType="number-pad"
                       maxLength={6}
                       value={value}
                       onChangeText={onChange}
-                      onFocus={() => setOtpFocused(true)}
-                      onBlur={() => { setOtpFocused(false); onBlur(); }}
+                      onBlur={onBlur}
                       selectionColor={colors.primary.gold}
                     />
                   </View>
                   {!!errors.otp && (
-                    <Text style={styles.errorText}>{errors.otp.message}</Text>
+                    <Text style={styles.errorText}>{errors.otp.message}  </Text>
                   )}
                 </View>
               )}
@@ -144,14 +142,14 @@ export default function VerifyOtpScreen() {
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>{t('verifyOtp.verifyOtp')}</Text>
+                <Text style={styles.primaryButtonText}>{t('verifyOtp.verifyOtp') + ' '}</Text>
               )}
             </TouchableOpacity>
           </View>
 
           {/* Footer */}
           <Text style={styles.footerText}>
-            {t('loginScreen.securedEncryption')}
+            {t('loginScreen.securedEncryption') + ' '}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -169,7 +167,7 @@ export default function VerifyOtpScreen() {
           onPress={() => setShowLanguageModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('settings.language')}</Text>
+            <Text style={styles.modalTitle}>{t('settings.language') + ' '}</Text>
             <View style={styles.langRow}>
               {(['en', 'hi', 'mr'] as const).map((l) => (
                 <TouchableOpacity
@@ -179,7 +177,7 @@ export default function VerifyOtpScreen() {
                   activeOpacity={0.75}
                 >
                   <Text style={[styles.langChipText, language === l && styles.langChipTextActive]}>
-                    {l.toUpperCase()}
+                    {l.toUpperCase() + ' '}
                   </Text>
                 </TouchableOpacity>
               ))}

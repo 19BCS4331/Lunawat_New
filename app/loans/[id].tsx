@@ -25,7 +25,7 @@ function Row({ label, value, highlight }: RowProps) {
   return (
     <View style={styles.row}>
       <Text style={styles.rowLabel}>{label}</Text>
-      <Text style={[styles.rowValue, highlight && styles.rowValueHighlight]}>{value}</Text>
+      <Text style={[styles.rowValue, highlight && styles.rowValueHighlight]}>{value}  </Text>
     </View>
   );
 }
@@ -55,9 +55,9 @@ export default function LoanDetailsScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <Ionicons name="alert-circle-outline" size={48} color={colors.warning} />
-          <Text style={styles.errorTitle}>Loan Not Found</Text>
+          <Text style={styles.errorTitle}>Loan Not Found  </Text>
           <TouchableOpacity style={styles.backBtnAlt} onPress={() => router.back()} activeOpacity={0.8}>
-            <Text style={styles.backBtnAltText}>Go Back</Text>
+            <Text style={styles.backBtnAltText}>Go Back  </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -84,7 +84,7 @@ export default function LoanDetailsScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={22} color={colors.primary.dark} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Loan Details</Text>
+        <Text style={styles.headerTitle}>Loan Details  </Text>
         <View style={{ width: 36 }} />
       </View>
 
@@ -95,12 +95,12 @@ export default function LoanDetailsScreen() {
           <View style={styles.heroDecor} />
           <View style={styles.heroTop}>
             <View>
-              <Text style={styles.heroLoanNo}>{loan.LoanNo}</Text>
-              {loan.BranchName ? <Text style={styles.heroBranch}>{loan.BranchName}</Text> : null}
+              <Text style={styles.heroLoanNo}>{loan.LoanNo}  </Text>
+              {loan.BranchName ? <Text style={styles.heroBranch}>{loan.BranchName}  </Text> : null}
             </View>
             <View style={[styles.badge, isOpen ? styles.badgeOpen : styles.badgeClosed]}>
               <Text style={[styles.badgeText, isOpen ? styles.badgeTextOpen : styles.badgeTextClosed]}>
-                {loan.LoanStatus}
+                {loan.LoanStatus + '  '}
               </Text>
             </View>
           </View>
@@ -109,21 +109,21 @@ export default function LoanDetailsScreen() {
             <>
               <Text style={styles.heroAmtLabel}>Outstanding Balance</Text>
               <Text style={styles.heroAmt}>
-                {pending > 0 ? `₹${pending.toLocaleString('en-IN')}` : '—'}
+                {pending > 0 ? `₹${pending.toLocaleString('en-IN')}` + ' ' : '—'}  
               </Text>
               <View style={styles.heroStatsRow}>
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatVal}>₹{loanAmt.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.heroStatVal}>₹{loanAmt.toLocaleString('en-IN')}  </Text>
                   <Text style={styles.heroStatLabel}>Loan Amount</Text>
                 </View>
                 <View style={styles.heroStatDivider} />
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatVal}>₹{interest.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.heroStatVal}>₹{interest.toLocaleString('en-IN')}  </Text>
                   <Text style={styles.heroStatLabel}>Interest</Text>
                 </View>
                 <View style={styles.heroStatDivider} />
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatVal}>{loan.IntDuedays ?? '0'}</Text>
+                  <Text style={styles.heroStatVal}>{loan.IntDuedays ?? '0'}  </Text>
                   <Text style={styles.heroStatLabel}>Due Days</Text>
                 </View>
               </View>
@@ -136,17 +136,17 @@ export default function LoanDetailsScreen() {
               </Text>
               <View style={styles.heroStatsRow}>
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatVal}>₹{loanAmt.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.heroStatVal}>₹{loanAmt.toLocaleString('en-IN')}  </Text>
                   <Text style={styles.heroStatLabel}>Loan Amount</Text>
                 </View>
                 <View style={styles.heroStatDivider} />
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatVal}>{loan.PaidBy ?? '—'}</Text>
+                  <Text style={styles.heroStatVal}>{loan.PaidBy ?? '—'}  </Text>
                   <Text style={styles.heroStatLabel}>Paid By</Text>
                 </View>
                 <View style={styles.heroStatDivider} />
                 <View style={styles.heroStat}>
-                  <Text style={styles.heroStatVal}>{loan.Scheme ?? '—'}</Text>
+                  <Text style={styles.heroStatVal}>{loan.Scheme ?? '—'}  </Text>
                   <Text style={styles.heroStatLabel}>Scheme</Text>
                 </View>
               </View>
@@ -162,32 +162,32 @@ export default function LoanDetailsScreen() {
             activeOpacity={0.85}
           >
             <Ionicons name="card-outline" size={18} color={colors.white} />
-            <Text style={styles.payBtnText}>Make Payment</Text>
+            <Text style={styles.payBtnText}>Make Payment  </Text>
             <Ionicons name="chevron-forward" size={16} color="rgba(255,255,255,0.7)" />
           </TouchableOpacity>
         )}
 
         {/* Gold Details */}
-        <Text style={styles.sectionTitle}>Gold Details</Text>
+        <Text style={styles.sectionTitle}>Gold Details  </Text>
         <View style={styles.card}>
           <View style={styles.goldBanner}>
             <Ionicons name="diamond-outline" size={18} color={colors.primary.gold} />
             <Text style={styles.goldBannerText}>
-              {loan.GrossWeight ?? '—'} gross weight • {loan.NetWeight ?? '—'} net weight
+              {loan.GrossWeight ?? '—'} gross weight • {loan.NetWeight ?? '—'} net weight  
             </Text>
           </View>
           <View style={styles.divider} />
-          <Row label="Gold Rate" value={`₹${loan.GoldRate ?? '—'}/g`} />
+          <Row label="Gold Rate" value={`₹${loan.GoldRate ?? '—'}/g` + ' '} />
           <View style={styles.rowDivider} />
-          <Row label="Gold Value" value={`₹${goldAmt.toLocaleString('en-IN')}`} />
+          <Row label="Gold Value " value={`₹ ${goldAmt.toLocaleString('en-IN') + ' '}`} />
           <View style={styles.rowDivider} />
-          <Row label="Eligible Amount" value={`₹${eligible.toLocaleString('en-IN')}`} />
+          <Row label="Eligible Amount" value={`₹${eligible.toLocaleString('en-IN') + ' '}`} />
           <View style={styles.rowDivider} />
           <Row label="Scheme" value={loan.Scheme ?? '—'} />
         </View>
 
         {/* Loan Info */}
-        <Text style={styles.sectionTitle}>Loan Information</Text>
+        <Text style={styles.sectionTitle}>Loan Information  </Text>
         <View style={styles.card}>
           <Row label="Branch" value={loan.BranchName ?? '—'} />
           <View style={styles.rowDivider} />
@@ -207,7 +207,7 @@ export default function LoanDetailsScreen() {
         {/* Payment Breakdown — only meaningful for open loans */}
         {isOpen && (
           <>
-            <Text style={styles.sectionTitle}>Payment Breakdown</Text>
+            <Text style={styles.sectionTitle}>Payment Breakdown  </Text>
             <View style={styles.card}>
               <Row label="Principal Pending" value={pending > 0 ? `₹${pending.toLocaleString('en-IN')}` : '—'} />
               <View style={styles.rowDivider} />
@@ -228,9 +228,9 @@ export default function LoanDetailsScreen() {
               ) : null}
               <View style={styles.divider} />
               <View style={styles.totalRow}>
-                <Text style={styles.totalLabel}>Total Due</Text>
+                <Text style={styles.totalLabel}>Total Due  </Text>
                 <Text style={styles.totalValue}>
-                  {totalDue > 0 ? `₹${totalDue.toLocaleString('en-IN')}` : `₹${(pending + interest + notice + otherCharges).toLocaleString('en-IN')}`}
+                  {totalDue > 0 ? `₹${totalDue.toLocaleString('en-IN') + '   '}` : `₹${(pending + interest + notice + otherCharges).toLocaleString('en-IN') + ' '}`}  
                 </Text>
               </View>
             </View>
@@ -240,7 +240,7 @@ export default function LoanDetailsScreen() {
         {/* Payment Receipts */}
         {loanReceipts.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>Payment Receipts</Text>
+            <Text style={styles.sectionTitle}>Payment Receipts  </Text>
             <View style={styles.card}>
               {loanReceipts.map((p: OfflinePayment, idx: number) => (
                 <View key={p.ID}>
@@ -251,12 +251,12 @@ export default function LoanDetailsScreen() {
                         <Ionicons name="receipt-outline" size={16} color={colors.primary.gold} />
                       </View>
                       <View>
-                        <Text style={styles.receiptNo}>{p.ReceiptNo}</Text>
+                        <Text style={styles.receiptNo}>{p.ReceiptNo}  </Text>
                         <Text style={styles.receiptMeta}>{p.Date} · {p.PaidBy}</Text>
                       </View>
                     </View>
                     <View style={styles.receiptRight}>
-                      <Text style={styles.receiptAmt}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}</Text>
+                      <Text style={styles.receiptAmt}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
                       {p.URL ? (
                         <TouchableOpacity
                           onPress={() => Linking.openURL(p.URL)}

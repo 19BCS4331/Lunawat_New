@@ -33,7 +33,7 @@ class ApiClient {
 
         if (__DEV__) {
           console.log('🚀 API Request:', {
-            url: config.url,
+            url: API_BASE_URL + config.url,
             method: config.method,
             data: config.data,
             headers: config.headers,

@@ -53,32 +53,32 @@ export default function LoansIndexScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={22} color={colors.primary.dark} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('loansIndex.title')}</Text>
+        <Text style={styles.headerTitle}>{t('loansIndex.title')}  </Text>
         <View style={{ width: 36 }} />
       </View>
 
       {/* Summary Strip */}
       <View style={styles.summaryStrip}>
         <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{loans?.length ?? 0}</Text>
-          <Text style={styles.summaryLabel}>{t('loansIndex.total')}</Text>
+          <Text style={styles.summaryValue}>{loans?.length ?? 0}  </Text>
+          <Text style={styles.summaryLabel}>{t('loansIndex.total') + ' '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
           <Text style={[styles.summaryValue, { color: '#2E7D32' }]}>{openLoans.length}</Text>
-          <Text style={styles.summaryLabel}>{t('loansIndex.active')}</Text>
+          <Text style={styles.summaryLabel}>{t('loansIndex.active') + ' '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{closedLoans.length}</Text>
-          <Text style={styles.summaryLabel}>{t('loansIndex.closed')}</Text>
+          <Text style={styles.summaryValue}>{closedLoans.length}  </Text>
+          <Text style={styles.summaryLabel}>{t('loansIndex.closed') + ' '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
           <Text style={styles.summaryValue}>
-            {totalGoldWeight > 0 ? `${totalGoldWeight.toFixed(2)}g` : '—'}
+            {totalGoldWeight > 0 ? `${totalGoldWeight.toFixed(2)}g` + '  ' : '—'}  
           </Text>
-          <Text style={styles.summaryLabel}>{t('loansIndex.goldActive')}</Text>
+          <Text style={styles.summaryLabel}>{t('loansIndex.goldActive') + ' '}</Text>
         </View>
       </View>
 
@@ -95,7 +95,7 @@ export default function LoansIndexScreen() {
             color={activeTab === 'open' ? colors.primary.dark : colors.neutral[400]}
           />
           <Text style={[styles.tabText, activeTab === 'open' && styles.tabTextActive]}>
-            {t('loansIndex.active')} ({openLoans.length})
+            {t('loansIndex.active') + ' '} ({openLoans.length})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -109,7 +109,7 @@ export default function LoansIndexScreen() {
             color={activeTab === 'closed' ? colors.primary.dark : colors.neutral[400]}
           />
           <Text style={[styles.tabText, activeTab === 'closed' && styles.tabTextActive]}>
-            {t('loansIndex.closed')} ({closedLoans.length})
+            {t('loansIndex.closed') + ' '} ({closedLoans.length})
           </Text>
         </TouchableOpacity>
       </View>
@@ -117,14 +117,14 @@ export default function LoansIndexScreen() {
       {isLoading ? (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={colors.primary.gold} />
-          <Text style={styles.loadingText}>{t('loansIndex.loading')}</Text>
+          <Text style={styles.loadingText}>{t('loansIndex.loading') + ' '}</Text>
         </View>
       ) : error ? (
         <View style={styles.centered}>
           <Ionicons name="alert-circle-outline" size={44} color={colors.warning} />
-          <Text style={styles.errorText}>{t('loansIndex.failedToLoad')}</Text>
+          <Text style={styles.errorText}>{t('loansIndex.failedToLoad') + ' '}</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()} activeOpacity={0.8}>
-            <Text style={styles.retryText}>{t('common.retry')}</Text>
+            <Text style={styles.retryText}>{t('common.retry') + ' '}  </Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -144,12 +144,12 @@ export default function LoansIndexScreen() {
             <View style={styles.emptyWrap}>
               <Ionicons name="folder-open-outline" size={48} color={colors.neutral[300]} />
               <Text style={styles.emptyTitle}>
-                {activeTab === 'open' ? t('loansIndex.noActiveLoans') : t('loansIndex.noClosedLoans')}
+                {activeTab === 'open' ? t('loansIndex.noActiveLoans') + ' ' : t('loansIndex.noClosedLoans') + ' '}  
               </Text>
               <Text style={styles.emptySubtitle}>
                 {activeTab === 'open'
-                  ? t('loansIndex.noActiveSubtitle')
-                  : t('loansIndex.noClosedSubtitle')}
+                  ? t('loansIndex.noActiveSubtitle') + ' '
+                  : t('loansIndex.noClosedSubtitle') + ' '}
               </Text>
             </View>
           ) : (
@@ -171,16 +171,16 @@ export default function LoansIndexScreen() {
                   {/* Card Header */}
                   <View style={styles.cardHeader}>
                     <View style={styles.cardHeaderLeft}>
-                      <Text style={styles.loanNo}>{loan.LoanNo}</Text>
+                      <Text style={styles.loanNo}>{loan.LoanNo}  </Text>
                       <Text style={styles.branch}>{loan.BranchName ?? ''}</Text>
                     </View>
                     <View style={styles.cardHeaderRight}>
                       <View style={[styles.badge, isOpen ? styles.badgeOpen : styles.badgeClosed]}>
                         <Text style={[styles.badgeText, isOpen ? styles.badgeTextOpen : styles.badgeTextClosed]}>
-                          {isOpen ? t('loansIndex.statusOpen') : t('loansIndex.statusClosed')}
+                          {isOpen ? t('loansIndex.statusOpen') + ' ' : t('loansIndex.statusClosed') + ' '}  
                         </Text>
                       </View>
-                      <Text style={styles.scheme}>{loan.Scheme ?? ''}</Text>
+                      <Text style={styles.scheme}>{loan.Scheme ?? ''}  </Text>
                     </View>
                   </View>
 
@@ -190,7 +190,7 @@ export default function LoansIndexScreen() {
                   <View style={styles.statsRow}>
                     <View style={styles.stat}>
                       <Text style={styles.statLabel}>{t('loansIndex.loanAmount')}</Text>
-                      <Text style={styles.statValue}>₹{loanAmt.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.statValue}>₹{loanAmt.toLocaleString('en-IN')}  </Text>
                     </View>
                     {isOpen ? (
                       <>
@@ -203,7 +203,7 @@ export default function LoansIndexScreen() {
                         <View style={styles.stat}>
                           <Text style={styles.statLabel}>{t('loansIndex.interest')}</Text>
                           <Text style={styles.statValue}>
-                            {interest > 0 ? `₹${interest.toLocaleString('en-IN')}` : '—'}
+                            {interest > 0 ? `₹${interest.toLocaleString('en-IN')}` : '—'}  
                           </Text>
                         </View>
                       </>
@@ -217,7 +217,7 @@ export default function LoansIndexScreen() {
                         </View>
                         <View style={styles.stat}>
                           <Text style={styles.statLabel}>{t('loansIndex.paidBy')}</Text>
-                          <Text style={styles.statValue}>{loan.PaidBy ?? '—'}</Text>
+                          <Text style={styles.statValue}>{loan.PaidBy ?? '—'}  </Text>
                         </View>
                       </>
                     )}
@@ -231,22 +231,22 @@ export default function LoansIndexScreen() {
                         {loan.GrossWeight ?? '—'} {t('loansIndex.gross')} • {loan.NetWeight ?? '—'} {t('loansIndex.net')}
                       </Text>
                     </View>
-                    <Text style={styles.goldRate}>₹{loan.GoldRate ?? '—'}/g</Text>
+                    <Text style={styles.goldRate}>₹{loan.GoldRate ?? '—'}/g  </Text>
                   </View>
 
                   {/* Gold Value Row */}
                   <View style={styles.valueRow}>
                     <View style={styles.valueItem}>
                       <Text style={styles.valueLabel}>{t('loansIndex.goldValue')}</Text>
-                      <Text style={styles.valueAmt}>₹{goldAmt.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.valueAmt}>₹{goldAmt.toLocaleString('en-IN')}  </Text>
                     </View>
                     <View style={styles.valueItem}>
                       <Text style={styles.valueLabel}>{t('loansIndex.eligible')}</Text>
-                      <Text style={styles.valueAmt}>₹{eligible.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.valueAmt}>₹{eligible.toLocaleString('en-IN')}  </Text>
                     </View>
                     <View style={styles.valueItem}>
                       <Text style={styles.valueLabel}>{t('loansIndex.date')}</Text>
-                      <Text style={styles.valueAmt}>{loan.LoanDate}</Text>
+                      <Text style={styles.valueAmt}>{loan.LoanDate}  </Text>
                     </View>
                   </View>
 
@@ -258,12 +258,12 @@ export default function LoansIndexScreen() {
                       activeOpacity={0.85}
                     >
                       <Ionicons name="card-outline" size={15} color={colors.white} />
-                      <Text style={styles.payBtnText}>{t('loansIndex.makePayment')}</Text>
+                      <Text style={styles.payBtnText}>{t('loansIndex.makePayment')}  </Text>
                     </TouchableOpacity>
                   ) : (
                     <View style={styles.closedFooter}>
                       <Ionicons name="checkmark-circle" size={14} color="#2E7D32" />
-                      <Text style={styles.closedFooterText}>{t('loansIndex.loanClosed')}</Text>
+                      <Text style={styles.closedFooterText}>{t('loansIndex.loanClosed')}  </Text>
                     </View>
                   )}
                 </TouchableOpacity>

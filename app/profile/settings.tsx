@@ -31,7 +31,7 @@ function SettingRow({
           <Ionicons name={icon} size={18} color={colors.white} />
         </View>
         <View style={s.rowText}>
-          <Text style={s.rowTitle}>{title}</Text>
+          <Text style={s.rowTitle}>{title}  </Text>
           {!!subtitle && <Text style={s.rowSubtitle}>{subtitle}</Text>}
         </View>
         {right}
@@ -144,12 +144,12 @@ export default function SettingsScreen() {
           <TouchableOpacity style={s.backBtn} onPress={() => router.back()} activeOpacity={0.7}>
             <Ionicons name="chevron-back" size={22} color={colors.primary.dark} />
           </TouchableOpacity>
-          <Text style={s.headerTitle}>{t('settings.title')}</Text>
+          <Text style={s.headerTitle}>{t('settings.title')}  </Text>
           <View style={{ width: 36 }} />
         </View>
 
         {/* Preferences */}
-        <Text style={s.sectionLabel}>{t('settings.preferences')}</Text>
+        <Text style={s.sectionLabel}>{t('settings.preferences')}  </Text>
         <View style={s.card}>
           <SettingRow
             icon="language-outline" iconBg="#6366F1"
@@ -165,7 +165,7 @@ export default function SettingsScreen() {
                     activeOpacity={0.75}
                   >
                     <Text style={[s.langChipText, language === l && s.langChipTextActive]}>
-                      {l.toUpperCase()}
+                      {l.toUpperCase() + ' '}  
                     </Text>
                   </TouchableOpacity>
                 ))}
@@ -189,7 +189,7 @@ export default function SettingsScreen() {
         </View>
 
         {/* Security */}
-        <Text style={s.sectionLabel}>{t('settings.security')}</Text>
+        <Text style={s.sectionLabel}>{t('settings.security')}  </Text>
         <View style={s.card}>
           <SettingRow
             icon="finger-print" iconBg={isAvailable ? colors.primary.dark : colors.neutral[400]}
@@ -219,7 +219,7 @@ export default function SettingsScreen() {
                 {isPinEnabled && (
                   <View style={s.pinBadge}>
                     <Ionicons name="shield-checkmark" size={12} color="#10B981" />
-                    <Text style={s.pinBadgeText}>{t('settings.pinBadgeOn')}</Text>
+                    <Text style={s.pinBadgeText}>{t('settings.pinBadgeOn')}  </Text>
                   </View>
                 )}
                 <Switch
@@ -234,7 +234,7 @@ export default function SettingsScreen() {
         </View>
 
         {/* Account */}
-        <Text style={s.sectionLabel}>{t('settings.account')}</Text>
+        <Text style={s.sectionLabel}>{t('settings.account')}  </Text>
         <View style={s.card}>
           <SettingRow
             icon="key-outline" iconBg="#8B5CF6"
@@ -248,7 +248,7 @@ export default function SettingsScreen() {
         {/* Logout */}
         <TouchableOpacity style={s.logoutBtn} onPress={handleLogout} activeOpacity={0.8}>
           <Ionicons name="log-out-outline" size={18} color="#EF4444" />
-          <Text style={s.logoutText}>{t('settings.logout')}</Text>
+          <Text style={s.logoutText}>{t('settings.logout')}  </Text>
         </TouchableOpacity>
 
         <View style={{ height: spacing[8] }} />

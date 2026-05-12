@@ -45,8 +45,8 @@ export default function LoansScreen() {
     <SafeAreaView style={styles.safeArea}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('loans.title')}</Text>
-        <Text style={styles.headerSub}>{loans?.length ?? 0} {t('loans.totalAccounts')}</Text>
+        <Text style={styles.headerTitle}>{t('loans.title') + ' '}  </Text>
+        <Text style={styles.headerSub}>{loans?.length ?? 0} {t('loans.totalAccounts') + ' '}</Text>
       </View>
 
       {/* Tab Switcher */}
@@ -57,7 +57,7 @@ export default function LoansScreen() {
           activeOpacity={0.8}
         >
           <Text style={[styles.tabText, activeTab === 'open' && styles.tabTextActive]}>
-            {t('loans.tabActive')} ({openLoans.length})
+            {t('loans.tabActive') + ' '} ({openLoans.length})  
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -66,7 +66,7 @@ export default function LoansScreen() {
           activeOpacity={0.8}
         >
           <Text style={[styles.tabText, activeTab === 'closed' && styles.tabTextActive]}>
-            {t('loans.tabClosed')} ({closedLoans.length})
+            {t('loans.tabClosed') + ' '} ({closedLoans.length})  
           </Text>
         </TouchableOpacity>
       </View>
@@ -78,9 +78,9 @@ export default function LoansScreen() {
       ) : error ? (
         <View style={styles.centered}>
           <Ionicons name="alert-circle-outline" size={44} color={colors.warning} />
-          <Text style={styles.errorText}>{t('loans.failedToLoad')}</Text>
+          <Text style={styles.errorText}>{t('loans.failedToLoad')}  </Text>
           <TouchableOpacity style={styles.retryBtn} onPress={() => refetch()} activeOpacity={0.8}>
-            <Text style={styles.retryText}>{t('common.retry')}</Text>
+            <Text style={styles.retryText}>{t('common.retry')}  </Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -95,7 +95,7 @@ export default function LoansScreen() {
             <View style={styles.emptyCard}>
               <Ionicons name="folder-open-outline" size={44} color={colors.neutral[300]} />
               <Text style={styles.emptyTitle}>
-                {activeTab === 'open' ? t('loans.noActiveLoans') : t('loans.noClosedLoans')}
+                {activeTab === 'open' ? t('loans.noActiveLoans') : t('loans.noClosedLoans')}  
               </Text>
             </View>
           ) : (
@@ -114,12 +114,12 @@ export default function LoansScreen() {
                 >
                   <View style={styles.cardHeader}>
                     <View style={styles.cardLeft}>
-                      <Text style={styles.loanNo}>{loan.LoanNo}</Text>
+                      <Text style={styles.loanNo}>{loan.LoanNo}  </Text>
                       {loan.BranchName ? <Text style={styles.branch}>{loan.BranchName}</Text> : null}
                     </View>
                     <View style={[styles.badge, isOpen ? styles.badgeOpen : styles.badgeClosed]}>
                       <Text style={[styles.badgeText, isOpen ? styles.badgeTextOpen : styles.badgeTextClosed]}>
-                        {isOpen ? t('loans.statusOpen') : t('loans.statusClosed')}
+                        {isOpen ? t('loans.statusOpen') + ' ' : t('loans.statusClosed') + ' '}  
                       </Text>
                     </View>
                   </View>
@@ -129,7 +129,7 @@ export default function LoansScreen() {
                   <View style={styles.statsRow}>
                     <View style={styles.stat}>
                       <Text style={styles.statLabel}>{t('loans.loanAmount')}</Text>
-                      <Text style={styles.statValue}>₹{loanAmt.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.statValue}>₹{loanAmt.toLocaleString('en-IN')}  </Text>
                     </View>
                     {isOpen ? (
                       <>
@@ -140,15 +140,15 @@ export default function LoansScreen() {
                           </Text>
                         </View>
                         <View style={styles.stat}>
-                          <Text style={styles.statLabel}>{t('loans.interest')}</Text>
+                          <Text style={styles.statLabel}>{t('loans.interest')}  </Text>
                           <Text style={styles.statValue}>
-                            {interest > 0 ? `₹${interest.toLocaleString('en-IN')}` : '—'}
+                            {interest > 0 ? `₹${interest.toLocaleString('en-IN')}` : '—'}  
                           </Text>
                         </View>
                       </>
                     ) : (
                       <View style={styles.stat}>
-                        <Text style={styles.statLabel}>{t('loans.netPaid')}</Text>
+                        <Text style={styles.statLabel}>{t('loans.netPaid')}  </Text>
                         <Text style={[styles.statValue, { color: '#2E7D32' }]}>
                           {loan.NetPaid ? `₹${loan.NetPaid}` : `₹${loanAmt.toLocaleString('en-IN')}`}
                         </Text>
@@ -167,8 +167,8 @@ export default function LoansScreen() {
 
                   {isOpen && total > 0 ? (
                     <View style={styles.totalDue}>
-                      <Text style={styles.totalDueLabel}>{t('loans.totalDue')}</Text>
-                      <Text style={styles.totalDueValue}>₹{total.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.totalDueLabel}>{t('loans.totalDue')}  </Text>
+                      <Text style={styles.totalDueValue}>₹{total.toLocaleString('en-IN')}  </Text>
                     </View>
                   ) : null}
 

@@ -43,14 +43,14 @@ function LoanCard({ loan, onPress }: LoanCardProps) {
     <TouchableOpacity style={styles.loanCard} onPress={onPress} activeOpacity={0.82}>
       <View style={styles.loanCardHeader}>
         <View>
-          <Text style={styles.loanNo}>{loan.LoanNo}</Text>
+          <Text style={styles.loanNo}>{loan.LoanNo}        </Text>
           {loan.BranchName ? (
-            <Text style={styles.loanBranch}>{loan.BranchName}</Text>
+            <Text style={styles.loanBranch}>{loan.BranchName}     </Text>
           ) : null}
         </View>
         <View style={[styles.statusBadge, isOpen ? styles.statusOpen : styles.statusClosed]}>
           <Text style={[styles.statusText, isOpen ? styles.statusTextOpen : styles.statusTextClosed]}>
-            {isOpen ? t('dashboard.statusOpen') : t('dashboard.statusClosed')}
+            {isOpen ? t('dashboard.statusOpen')+ ' ' : t('dashboard.statusClosed') + ' '}
           </Text>
         </View>
       </View>
@@ -60,27 +60,27 @@ function LoanCard({ loan, onPress }: LoanCardProps) {
       <View style={styles.loanRow}>
         <View style={styles.loanStat}>
           <Text style={styles.loanStatLabel}>{t('dashboard.loanAmount')}</Text>
-          <Text style={styles.loanStatValue}>{formatINR(loanAmt)}</Text>
+          <Text style={styles.loanStatValue}>{formatINR(loanAmt) + ' '}        </Text>
         </View>
         {isOpen ? (
           <View style={styles.loanStat}>
             <Text style={styles.loanStatLabel}>{t('dashboard.pending')}</Text>
             <Text style={[styles.loanStatValue, styles.loanStatPending]}>
-              {pending > 0 ? formatINR(pending) : '—'}
+              {pending > 0 ? formatINR(pending) + ' ' : '—'}
             </Text>
           </View>
         ) : (
           <View style={styles.loanStat}>
             <Text style={styles.loanStatLabel}>{t('dashboard.netPaid')}</Text>
             <Text style={[styles.loanStatValue, styles.loanStatPaid]}>
-              {loan.NetPaid ? `₹${loan.NetPaid}` : formatINR(loanAmt)}
+              {loan.NetPaid ? `₹${loan.NetPaid}`+ ' ' : formatINR(loanAmt) + ' '}
             </Text>
           </View>
         )}
         {isOpen && interest > 0 ? (
           <View style={styles.loanStat}>
             <Text style={styles.loanStatLabel}>{t('dashboard.interest')}</Text>
-            <Text style={styles.loanStatValue}>{formatINR(interest)}</Text>
+            <Text style={styles.loanStatValue}>{formatINR(interest) + ' '} </Text>
           </View>
         ) : null}
       </View>
@@ -88,7 +88,7 @@ function LoanCard({ loan, onPress }: LoanCardProps) {
       {loan.GrossWeight ? (
         <View style={styles.loanGoldRow}>
           <Text style={styles.loanGoldText}>
-            {t('dashboard.gold')}: {loan.GrossWeight}  •  {t('dashboard.rate')}: ₹{loan.GoldRate}
+            {t('dashboard.gold') + ' '}: {loan.GrossWeight}  •  {t('dashboard.rate') + ' '}: ₹{loan.GoldRate}
           </Text>
           <Text style={styles.loanDateText}>{loan.LoanDate}</Text>
         </View>
@@ -133,7 +133,7 @@ export default function DashboardScreen() {
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={colors.primary.gold} />
-          <Text style={styles.loadingText}>{t('dashboard.loadingPortfolio')}</Text>
+          <Text style={styles.loadingText}>{t('dashboard.loadingPortfolio') + ' '}</Text>
         </View>
       </SafeAreaView>
     );
@@ -147,7 +147,7 @@ export default function DashboardScreen() {
           <Text style={styles.errorTitle}>{t('dashboard.unableToLoad')}</Text>
           <Text style={styles.errorSubtitle}>{t('dashboard.checkConnection')}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={() => refetch()} activeOpacity={0.8}>
-            <Text style={styles.retryButtonText}>{t('dashboard.retry')}</Text>
+            <Text style={styles.retryButtonText}>{t('dashboard.retry') + ' '}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -171,8 +171,8 @@ export default function DashboardScreen() {
         {/* ── Header ── */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>{t('dashboard.greeting')}</Text>
-            <Text style={styles.userName}>{profile?.Name ?? t('dashboard.customerName')}</Text>
+            <Text style={styles.greeting}>{t('dashboard.greeting')}  </Text>
+            <Text style={styles.userName}>{profile?.Name ?? t('dashboard.customerName')}   </Text>
           </View>
           <TouchableOpacity
             style={styles.avatarButton}
@@ -182,7 +182,7 @@ export default function DashboardScreen() {
             {profile?.ProfileImage ? (
               <Image source={{ uri: profile.ProfileImage }} style={styles.avatarImage} />
             ) : profile?.Name ? (
-              <Text style={styles.avatarText}>{profile.Name.charAt(0).toUpperCase()}</Text>
+              <Text style={styles.avatarText}>{profile.Name.charAt(0).toUpperCase()}  </Text>
             ) : (
               <Ionicons name="person" size={20} color={colors.white} />
             )}
@@ -192,18 +192,18 @@ export default function DashboardScreen() {
         {/* ── Hero Card ── */}
         <View style={styles.heroCard}>
           <View style={styles.heroDecorCircle} />
-          <Text style={styles.heroLabel}>{t('dashboard.totalOutstanding')}</Text>
-          <Text style={styles.heroAmount}>{formatINR(totalOutstanding)}</Text>
+          <Text style={styles.heroLabel}>{t('dashboard.totalOutstanding')}  </Text>
+          <Text style={styles.heroAmount}>{formatINR(totalOutstanding)}  </Text>
 
           <View style={styles.heroStatsRow}>
             <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{openLoans.length}</Text>
-              <Text style={styles.heroStatLabel}>{t('dashboard.activeLoans')}</Text>
+              <Text style={styles.heroStatValue}>{openLoans.length}  </Text>
+              <Text style={styles.heroStatLabel}>{t('dashboard.activeLoans')}  </Text>
             </View>
             <View style={styles.heroStatDivider} />
             <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{closedCount}</Text>
-              <Text style={styles.heroStatLabel}>{t('dashboard.closedLoans')}</Text>
+              <Text style={styles.heroStatValue}>{closedCount}  </Text>
+              <Text style={styles.heroStatLabel}>{t('dashboard.closedLoans')}  </Text>
             </View>
             {/* <View style={styles.heroStatDivider} /> */}
             {/* <View style={styles.heroStat}>
@@ -214,7 +214,7 @@ export default function DashboardScreen() {
         </View>
 
         {/* ── Quick Actions ── */}
-        <Text style={styles.sectionTitle}>{t('dashboard.quickActions')}</Text>
+        <Text style={styles.sectionTitle}>{t('dashboard.quickActions')}  </Text>
         <View style={styles.actionsGrid}>
           {quickActions.map((a) => (
             <TouchableOpacity
@@ -226,16 +226,16 @@ export default function DashboardScreen() {
               <View style={styles.actionIconWrap}>
                 <Ionicons name={a.icon} size={22} color={colors.primary.dark} />
               </View>
-              <Text style={styles.actionLabel}>{a.label}</Text>
+              <Text style={styles.actionLabel}>{a.label} </Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* ── Recent Loans ── */}
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{t('dashboard.recentLoans')}</Text>
+          <Text style={styles.sectionTitle}>{t('dashboard.recentLoans') + ' '}</Text>
           <TouchableOpacity onPress={() => router.push('/loans')} activeOpacity={0.7}>
-            <Text style={styles.seeAll}>{t('dashboard.viewAll')}</Text>
+            <Text style={styles.seeAll}>{t('dashboard.viewAll') + ' '}</Text>
           </TouchableOpacity>
         </View>
 
@@ -250,8 +250,8 @@ export default function DashboardScreen() {
         ) : (
           <View style={styles.emptyCard}>
             <Ionicons name="folder-open-outline" size={44} color={colors.neutral[300]} style={{ marginBottom: spacing[3] }} />
-            <Text style={styles.emptyTitle}>{t('dashboard.noLoansFound')}</Text>
-            <Text style={styles.emptySubtitle}>{t('dashboard.noLoansSubtitle')}</Text>
+            <Text style={styles.emptyTitle}>{t('dashboard.noLoansFound') + ' '}</Text>
+            <Text style={styles.emptySubtitle}>{t('dashboard.noLoansSubtitle') + ' '}</Text>
           </View>
         )}
 
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center',
     marginBottom: spacing[2],
   },
-  actionLabel: { fontSize: 11, fontWeight: '700', color: colors.neutral[700], textAlign: 'center' },
+  actionLabel: { fontSize: 11, fontWeight: 'bold', color: colors.neutral[700], textAlign: 'center' },
 
   // Section
   sectionHeader: {

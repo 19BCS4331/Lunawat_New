@@ -56,13 +56,13 @@ export default function EditProfileScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: spacing[6] }}>
         <Pressable onPress={() => router.back()} style={{ marginBottom: spacing[4] }}>
           <Text style={{ fontSize: 16, color: colors.primary.gold, fontWeight: '600' }}>
-            ← Back
+            ← Back  
           </Text>
         </Pressable>
 
         <View style={{ marginBottom: spacing[6] }}>
           <Text style={{ fontSize: 28, fontWeight: '700', color: colors.neutral[900], marginBottom: spacing[1] }}>
-            Edit Profile
+            Edit Profile  
           </Text>
           <Text style={{ fontSize: 16, color: colors.neutral[600] }}>
             Update your personal information
@@ -101,7 +101,7 @@ export default function EditProfileScreen() {
         </Card>
 
         <Text style={{ fontSize: 18, fontWeight: '600', color: colors.neutral[900], marginBottom: spacing[4] }}>
-          Address
+          Address  
         </Text>
 
         <Card variant="outlined" style={{ marginBottom: spacing[6], padding: spacing[4] }}>

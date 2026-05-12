@@ -180,7 +180,7 @@ export default function MakePaymentScreen() {
           <TouchableOpacity onPress={confirmCancelPayment} style={styles.webCancelBtn} activeOpacity={0.7}>
             <Ionicons name="close" size={20} color={colors.neutral[700]} />
           </TouchableOpacity>
-          <Text style={styles.webHeaderTitle}>{t('makePayment.securePayment')}</Text>
+          <Text style={styles.webHeaderTitle}>{t('makePayment.securePayment')}  </Text>
           <View style={styles.webHeaderLock}>
             <Ionicons name="lock-closed" size={14} color={colors.primary.gold} />
           </View>
@@ -270,14 +270,14 @@ export default function MakePaymentScreen() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
             <Ionicons name="chevron-back" size={22} color={colors.primary.dark} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('makePayment.title')}</Text>
+          <Text style={styles.headerTitle}>{t('makePayment.title')}  </Text>
           <View style={{ width: 36 }} />
         </View>
 
         {/* Loan selector — only shown if no loanId pre-selected */}
         {!loanId && (
           <>
-            <Text style={styles.sectionTitle}>{t('makePayment.selectLoan')}</Text>
+            <Text style={styles.sectionTitle}>{t('makePayment.selectLoan')}  </Text>
             {openLoans.length === 0 ? (
               <View style={styles.emptyCard}>
                 <Ionicons name="document-text-outline" size={32} color={colors.neutral[300]} />
@@ -294,11 +294,11 @@ export default function MakePaymentScreen() {
                     activeOpacity={0.75}
                   >
                     <View style={styles.loanCardLeft}>
-                      <Text style={styles.loanNo}>{loan.LoanNo}</Text>
+                      <Text style={styles.loanNo}>{loan.LoanNo}  </Text>
                       {loan.BranchName ? <Text style={styles.loanBranch}>{loan.BranchName}</Text> : null}
                     </View>
                     <View style={styles.loanCardRight}>
-                      <Text style={styles.loanDue}>₹{parseSafe(loan.TotalDueAmount).toLocaleString('en-IN')}</Text>
+                      <Text style={styles.loanDue}>₹{parseSafe(loan.TotalDueAmount).toLocaleString('en-IN')}  </Text>
                       <Text style={styles.loanDueLabel}>{t('makePayment.totalDue')}</Text>
                     </View>
                     {selected && <Ionicons name="checkmark-circle" size={20} color={colors.primary.gold} style={{ marginLeft: spacing[2] }} />}
@@ -312,31 +312,31 @@ export default function MakePaymentScreen() {
         {/* Selected loan summary */}
         {selectedLoan && (
           <>
-            <Text style={styles.sectionTitle}>{t('makePayment.loanSummary')}</Text>
+            <Text style={styles.sectionTitle}>{t('makePayment.loanSummary')}  </Text>
             <View style={styles.summaryCard}>
               <View style={styles.summaryRow}>
-                <Text style={styles.summaryLabel}>{t('makePayment.loanNo')}</Text>
-                <Text style={styles.summaryValue}>{selectedLoan.LoanNo}</Text>
+                <Text style={styles.summaryLabel}>{t('makePayment.loanNo')}  </Text>
+                <Text style={styles.summaryValue}>{selectedLoan.LoanNo}  </Text>
               </View>
               <View style={styles.summaryDivider} />
               <View style={styles.summaryStatsRow}>
                 <View style={styles.summaryStat}>
-                  <Text style={styles.summaryStatVal}>₹{pending.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.summaryStatVal}>₹{pending.toLocaleString('en-IN')}  </Text>
                   <Text style={styles.summaryStatLabel}>{t('makePayment.principal')}</Text>
                 </View>
                 <View style={styles.summaryStatDivider} />
                 <View style={styles.summaryStat}>
-                  <Text style={styles.summaryStatVal}>₹{intAmt.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.summaryStatVal}>₹{intAmt.toLocaleString('en-IN')}  </Text>
                   <Text style={styles.summaryStatLabel}>{t('makePayment.interest')}</Text>
                 </View>
                 <View style={styles.summaryStatDivider} />
                 <View style={styles.summaryStat}>
-                  <Text style={styles.summaryStatVal}>{intDueDays}</Text>
+                  <Text style={styles.summaryStatVal}>{intDueDays}  </Text>
                   <Text style={styles.summaryStatLabel}>{t('makePayment.dueDays')}</Text>
                 </View>
                 <View style={styles.summaryStatDivider} />
                 <View style={styles.summaryStat}>
-                  <Text style={[styles.summaryStatVal, { color: colors.error }]}>₹{totalDue.toLocaleString('en-IN')}</Text>
+                  <Text style={[styles.summaryStatVal, { color: colors.error }]}>₹{totalDue.toLocaleString('en-IN')}  </Text>
                   <Text style={styles.summaryStatLabel}>{t('makePayment.totalDue')}</Text>
                 </View>
               </View>
@@ -350,10 +350,10 @@ export default function MakePaymentScreen() {
         {/* Amount input */}
         {selectedLoan && (
           <>
-            <Text style={styles.sectionTitle}>{t('makePayment.paymentAmount')}</Text>
+            <Text style={styles.sectionTitle}>{t('makePayment.paymentAmount')}  </Text>
             <View style={styles.amountCard}>
               <View style={styles.amountInputRow}>
-                <Text style={styles.rupeeSymbol}>₹</Text>
+                <Text style={styles.rupeeSymbol}>₹  </Text>
                 <TextInput
                   style={styles.amountInput}
                   placeholder={t('makePayment.placeholder')}
@@ -374,7 +374,7 @@ export default function MakePaymentScreen() {
                       onPress={() => setPaymentAmount(suggests.lower.toString())}
                       activeOpacity={0.75}
                     >
-                      <Text style={styles.chipText}>₹{suggests.lower.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.chipText}>₹{suggests.lower.toLocaleString('en-IN')}  </Text>
                     </TouchableOpacity>
                   )}
                   {suggests.upper > 0 && suggests.upper !== suggests.lower && (
@@ -383,7 +383,7 @@ export default function MakePaymentScreen() {
                       onPress={() => setPaymentAmount(suggests.upper.toString())}
                       activeOpacity={0.75}
                     >
-                      <Text style={styles.chipText}>₹{suggests.upper.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.chipText}>₹{suggests.upper.toLocaleString('en-IN')}  </Text>
                     </TouchableOpacity>
                   )}
                 </View>
@@ -426,32 +426,32 @@ export default function MakePaymentScreen() {
         {/* Breakdown — only shown after strict validation passes */}
         {calculation?.canPay && (
           <>
-            <Text style={styles.sectionTitle}>{t('makePayment.breakdown')}</Text>
+            <Text style={styles.sectionTitle}>{t('makePayment.breakdown')}  </Text>
             <View style={styles.breakdownCard}>
               {calculation.payingIntDays > 0 && (
                 <View style={styles.breakdownRow}>
                   <Text style={styles.breakdownLabel}>{t('makePayment.interestDays', { days: calculation.payingIntDays })}</Text>
                   <Text style={styles.breakdownValue}>
-                    ₹{(calculation.payingIntDays * calculation.interestPerDay).toLocaleString('en-IN', { maximumFractionDigits: 2 })}
+                    ₹{(calculation.payingIntDays * calculation.interestPerDay).toLocaleString('en-IN', { maximumFractionDigits: 2 })}  
                   </Text>
                 </View>
               )}
               {calculation.principalAdjustment > 0 && (
                 <View style={styles.breakdownRow}>
                   <Text style={styles.breakdownLabel}>{t('makePayment.principalAdjustment')}</Text>
-                  <Text style={styles.breakdownValue}>₹{calculation.principalAdjustment.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.breakdownValue}>₹{calculation.principalAdjustment.toLocaleString('en-IN')}  </Text>
                 </View>
               )}
               {calculation.totalCharges > 0 && (
                 <View style={styles.breakdownRow}>
                   <Text style={styles.breakdownLabel}>{t('makePayment.charges')}</Text>
-                  <Text style={styles.breakdownValue}>₹{calculation.totalCharges.toLocaleString('en-IN')}</Text>
+                  <Text style={styles.breakdownValue}>₹{calculation.totalCharges.toLocaleString('en-IN')}  </Text>
                 </View>
               )}
               <View style={styles.breakdownDivider} />
               <View style={styles.breakdownRow}>
-                <Text style={styles.breakdownTotalLabel}>{t('makePayment.totalPayable')}</Text>
-                <Text style={styles.breakdownTotalValue}>₹{calculation.roundedTotal.toLocaleString('en-IN')}</Text>
+                <Text style={styles.breakdownTotalLabel}>{t('makePayment.totalPayable')}  </Text>
+                <Text style={styles.breakdownTotalValue}>₹{calculation.roundedTotal.toLocaleString('en-IN')}  </Text>
               </View>
             </View>
           </>
@@ -470,7 +470,7 @@ export default function MakePaymentScreen() {
             ) : (
               <>
                 <Ionicons name="lock-closed" size={16} color={colors.white} />
-                <Text style={styles.payBtnText}>{t('makePayment.paySecurely', { amount: paymentAmount || '—' })}</Text>
+                <Text style={styles.payBtnText}>{t('makePayment.paySecurely', { amount: paymentAmount || '—' })}  </Text>
               </>
             )}
           </TouchableOpacity>

@@ -112,7 +112,7 @@ export default function SetupPinScreen() {
         </View>
 
         {/* Title */}
-        <Text style={styles.title}>{step === 'enter' ? 'Create PIN' : 'Confirm PIN'}</Text>
+        <Text style={styles.title}>{step === 'enter' ? 'Create PIN' : 'Confirm PIN'}  </Text>
         <Text style={styles.subtitle}>
           {step === 'enter'
             ? 'Enter a 4-digit PIN to secure your app'
@@ -161,7 +161,7 @@ export default function SetupPinScreen() {
                     {key === '⌫' ? (
                       <Ionicons name="backspace-outline" size={22} color={colors.neutral[700]} />
                     ) : (
-                      <Text style={styles.keyText}>{key}</Text>
+                      <Text style={styles.keyText}>{key}  </Text>
                     )}
                   </TouchableOpacity>
                 ))}

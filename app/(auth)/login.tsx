@@ -102,7 +102,7 @@ export default function LoginScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="language-outline" size={18} color={colors.primary.dark} />
-            <Text style={styles.langBtnText}>{language.toUpperCase()}</Text>
+            <Text style={styles.langBtnText}>{language.toUpperCase() + ' '}</Text>
           </TouchableOpacity>
 
           {/* Header / Brand */}
@@ -110,13 +110,13 @@ export default function LoginScreen() {
             <View style={styles.logoMark}>
               <Image source={require('../../assets/SLF_New_Logo_PNG.png')} style={styles.logoImage} />
             </View>
-            <Text style={styles.brandName}>S Lunawat Finance</Text>
-            <Text style={styles.brandTagline}>Your Trusted Lending Partner</Text>
+            <Text style={styles.brandName}>S Lunawat Finance    </Text>
+            <Text style={styles.brandTagline}>Your Trusted Lending Partner   </Text>
           </View>
 
           {/* Card */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{t('loginScreen.welcomeBack')}</Text>
+            <Text style={styles.cardTitle}>{t('loginScreen.welcomeBack')}  </Text>
             <Text style={styles.cardSubtitle}>
               {inputMode === 'mobile' ? t('loginScreen.enterMobile') : t('loginScreen.enterEmail')}
             </Text>
@@ -129,7 +129,7 @@ export default function LoginScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.modeOptionText, inputMode === 'mobile' && styles.modeOptionTextActive]}>
-                  {t('loginScreen.mobile')}
+                  {t('loginScreen.mobile') + ' '}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -138,7 +138,7 @@ export default function LoginScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.modeOptionText, inputMode === 'email' && styles.modeOptionTextActive]}>
-                  {t('loginScreen.email')}
+                  {t('loginScreen.email') + ' '}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -152,7 +152,7 @@ export default function LoginScreen() {
                   <View style={styles.inputWrapper}>
                     <Text style={styles.inputLabel}>{t('loginScreen.mobileNumber')}</Text>
                     <View style={[styles.inputContainer, focused && styles.inputContainerFocused, !!errors.mobileNo && styles.inputContainerError]}>
-                      <Text style={styles.inputPrefix}>+91</Text>
+                      <Text style={styles.inputPrefix}>+91  </Text>
                       <View style={styles.inputDivider} />
                       <TextInput
                         style={styles.textInput}
@@ -162,13 +162,12 @@ export default function LoginScreen() {
                         maxLength={10}
                         value={value}
                         onChangeText={onChange}
-                        onFocus={() => setFocused(true)}
                         onBlur={() => { setFocused(false); onBlur(); }}
                         selectionColor={colors.primary.gold}
                       />
                     </View>
                     {!!errors.mobileNo && (
-                      <Text style={styles.errorText}>{errors.mobileNo.message}</Text>
+                      <Text style={styles.errorText}>{errors.mobileNo.message}  </Text>
                     )}
                   </View>
                 )}
@@ -192,13 +191,12 @@ export default function LoginScreen() {
                         autoCapitalize="none"
                         value={value}
                         onChangeText={onChange}
-                        onFocus={() => setFocused(true)}
                         onBlur={() => { setFocused(false); onBlur(); }}
                         selectionColor={colors.primary.gold}
                       />
                     </View>
                     {!!errors.email && (
-                      <Text style={styles.errorText}>{errors.email.message}</Text>
+                      <Text style={styles.errorText}>{errors.email.message}  </Text>
                     )}
                   </View>
                 )}
@@ -215,14 +213,14 @@ export default function LoginScreen() {
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>{t('loginScreen.sendOtp')}</Text>
+                <Text style={styles.primaryButtonText}>{t('loginScreen.sendOtp')+' '}</Text>
               )}
             </TouchableOpacity>
 
             {/* Divider */}
             <View style={styles.dividerRow}>
               <View style={styles.dividerLine} />
-              <Text style={styles.dividerText}>{t('loginScreen.or')}</Text>
+              <Text style={styles.dividerText}>{t('loginScreen.or')+''}</Text>
               <View style={styles.dividerLine} />
             </View>
 
@@ -232,13 +230,13 @@ export default function LoginScreen() {
               onPress={() => router.push('/(auth)/password-login')}
               activeOpacity={0.75}
             >
-              <Text style={styles.secondaryButtonText}>{t('loginScreen.loginWithPassword')}</Text>
+              <Text style={styles.secondaryButtonText}>{t('loginScreen.loginWithPassword') + '  '}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Footer */}
           <Text style={styles.footerText}>
-            {t('loginScreen.securedEncryption')}
+            {t('loginScreen.securedEncryption')}  
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -266,7 +264,7 @@ export default function LoginScreen() {
                   activeOpacity={0.75}
                 >
                   <Text style={[styles.langChipText, language === l && styles.langChipTextActive]}>
-                    {l.toUpperCase()}
+                    {l.toUpperCase() + ' '}
                   </Text>
                 </TouchableOpacity>
               ))}

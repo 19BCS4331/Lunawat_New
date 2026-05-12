@@ -8,6 +8,7 @@ import { useAuthStore, useAppStore } from '@/store';
 import { pinManager } from '@/utils/pin';
 import { biometricAuth } from '@/utils/biometric';
 import i18n from '@/localization/i18n.config';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -62,16 +63,18 @@ function AppGate() {
 
 export default function RootLayout() {
   return (
-    <QueryProvider>
-      <AppGate />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="loans" options={{ headerShown: false }} />
-        <Stack.Screen name="payments" options={{ headerShown: false }} />
-        <Stack.Screen name="profile" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </QueryProvider>
+    <SafeAreaProvider>
+      <QueryProvider>
+        <AppGate />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="loans" options={{ headerShown: false }} />
+          <Stack.Screen name="payments" options={{ headerShown: false }} />
+          <Stack.Screen name="profile" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+        </Stack>
+      </QueryProvider>
+    </SafeAreaProvider>
   );
 }

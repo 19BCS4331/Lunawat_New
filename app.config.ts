@@ -38,12 +38,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-router',
     'expo-local-authentication',
+    [
+      'expo-splash-screen',
+      {
+        image: './assets/SLF_Splash.png',
+        imageWidth: 1080,
+        imageHeight: 1920,
+        backgroundColor: '#FDFBF5',
+      },
+    ],
   ],
   extra: {
     eas: {
       projectId: '7eda4f92-2d1e-4266-9fef-9822b2abb9c2',
     },
-    API_BASE_URL: process.env.API_BASE_URL || 'https://myloan.slunawat.com/LoanAPI',
+    API_BASE_URL: process.env.API_BASE_URL || 'https://a837-122-169-52-6.ngrok-free.app',
     ENV: process.env.ENV || 'development',
   },
   runtimeVersion: {

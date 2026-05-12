@@ -40,13 +40,13 @@ export default function OnlinePaymentHistoryScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: spacing[6] }}>
         <Pressable onPress={() => router.back()} style={{ marginBottom: spacing[4] }}>
           <Text style={{ fontSize: 16, color: colors.primary.gold, fontWeight: '600' }}>
-            ← Back
+            ← Back  
           </Text>
         </Pressable>
 
         <View style={{ marginBottom: spacing[6] }}>
           <Text style={{ fontSize: 28, fontWeight: '700', color: colors.neutral[900], marginBottom: spacing[1] }}>
-            Online Payments
+            Online Payments  
           </Text>
           <Text style={{ fontSize: 16, color: colors.neutral[600] }}>
             {payments?.length || 0} transaction{payments?.length !== 1 ? 's' : ''}
@@ -58,7 +58,7 @@ export default function OnlinePaymentHistoryScreen() {
             <Card key={payment.ID} variant="outlined" style={{ marginBottom: spacing[3], padding: spacing[4] }}>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[2] }}>
                 <Text style={{ fontSize: 16, fontWeight: '600', color: colors.neutral[900] }}>
-                  {payment.LoanNo}
+                  {payment.LoanNo}  
                 </Text>
                 <View
                   style={{
@@ -75,27 +75,27 @@ export default function OnlinePaymentHistoryScreen() {
                       color: payment.Status === 'Success' ? colors.success[700] : colors.error[700],
                     }}
                   >
-                    {payment.Status}
+                    {payment.Status}  
                   </Text>
                 </View>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[2] }}>
                 <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Amount</Text>
                 <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-                  ₹{parseFloat(payment.Amount || '0').toLocaleString('en-IN')}
+                  ₹{parseFloat(payment.Amount || '0').toLocaleString('en-IN')}  
                 </Text>
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[2] }}>
                 <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Date</Text>
                 <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-                  {payment.Date}
+                  {payment.Date}  
                 </Text>
               </View>
               {payment.ResponseCode && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                   <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Response Code</Text>
                   <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-                    {payment.ResponseCode}
+                    {payment.ResponseCode}  
                   </Text>
                 </View>
               )}

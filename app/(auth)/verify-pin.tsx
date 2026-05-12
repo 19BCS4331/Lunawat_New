@@ -114,7 +114,7 @@ export default function VerifyPinScreen() {
           <Ionicons name="shield-checkmark" size={36} color={colors.white} />
         </View>
 
-        <Text style={styles.title}>Enter PIN</Text>
+        <Text style={styles.title}>Enter PIN  </Text>
         <Text style={styles.subtitle}>Enter your 4-digit PIN to continue</Text>
 
         {/* PIN dots */}
@@ -159,7 +159,7 @@ export default function VerifyPinScreen() {
                       ) : showBio ? (
                         <Ionicons name="finger-print" size={26} color={colors.primary.gold} />
                       ) : !isBio && !isEmpty ? (
-                        <Text style={styles.keyText}>{key}</Text>
+                        <Text style={styles.keyText}>{key}  </Text>
                       ) : null}
                     </TouchableOpacity>
                   );

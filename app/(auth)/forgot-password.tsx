@@ -33,25 +33,24 @@ export default function ForgotPasswordScreen() {
   const setLanguage = useAppStore((s) => s.setLanguage);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [inputMode, setInputMode] = useState<'mobile' | 'email'>('mobile');
-  const [inputFocused, setInputFocused] = useState(false);
 
   const onSubmit = async (data: SendLoginOtpForm) => {
     const value = inputMode === 'mobile' ? data.mobileNo : data.email;
     
     if (!value || value.length === 0) {
       const field = inputMode === 'mobile' ? 'mobileNo' : 'email';
-      setError(field, { message: inputMode === 'mobile' ? t('loginScreen.enter10DigitNumber') : t('loginScreen.enterEmail') });
+      setError(field, { message: inputMode === 'mobile' ? t('loginScreen.enter10DigitNumber') + ' ' : t('loginScreen.enterEmail') + ' ' });
       return;
     }
 
     // Validate format based on mode
     if (inputMode === 'mobile' && !/^[0-9]{10}$/.test(value)) {
-      setError('mobileNo', { message: t('loginScreen.enter10DigitNumber') });
+      setError('mobileNo', { message: t('loginScreen.enter10DigitNumber') + ' ' });
       return;
     }
 
     if (inputMode === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      setError('email', { message: t('loginScreen.enterEmail') });
+      setError('email', { message: t('loginScreen.enterEmail') + ' ' });
       return;
     }
 
@@ -70,9 +69,9 @@ export default function ForgotPasswordScreen() {
       const errorMessage = (error as Error).message;
       
       if (errorMessage === 'Invalid User' || errorMessage.includes('Invalid')) {
-        setError(field, { message: t('loginScreen.invalidUser') });
+        setError(field, { message: t('loginScreen.invalidUser') + ' ' });
       } else {
-        setError(field, { message: t('forgotPassword.sendOtpFailed') });
+        setError(field, { message: t('forgotPassword.sendOtpFailed') + ' ' });
       }
     }
   };
@@ -109,7 +108,7 @@ export default function ForgotPasswordScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="language-outline" size={18} color={colors.primary.dark} />
-            <Text style={styles.langBtnText}>{language.toUpperCase()}</Text>
+            <Text style={styles.langBtnText}>{language.toUpperCase() + ' '}</Text>
           </TouchableOpacity>
 
           {/* Back Button */}
@@ -126,14 +125,14 @@ export default function ForgotPasswordScreen() {
             <View style={styles.logoMark}>
               <Image source={require('../../assets/SLF_New_Logo_PNG.png')} style={styles.logoImage} />
             </View>
-            <Text style={styles.brandName}>S Lunawat Finance</Text>
-            <Text style={styles.brandTagline}>Your Trusted Lending Partner</Text>
+            <Text style={styles.brandName}>S Lunawat Finance   </Text>
+            <Text style={styles.brandTagline}>Your Trusted Lending Partner   </Text>
           </View>
 
           {/* Card */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{t('forgotPassword.title')}</Text>
-            <Text style={styles.cardSubtitle}>{t('forgotPassword.subtitle')}</Text>
+            <Text style={styles.cardTitle}>{t('forgotPassword.title') + ' '}</Text>
+            <Text style={styles.cardSubtitle}>{t('forgotPassword.subtitle') + ' '}</Text>
 
             {/* Mode Toggle */}
             <View style={styles.modeToggle}>
@@ -143,7 +142,7 @@ export default function ForgotPasswordScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.modeOptionText, inputMode === 'mobile' && styles.modeOptionTextActive]}>
-                  {t('loginScreen.mobile')}
+                  {t('loginScreen.mobile') + ' '}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -152,7 +151,7 @@ export default function ForgotPasswordScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.modeOptionText, inputMode === 'email' && styles.modeOptionTextActive]}>
-                  {t('loginScreen.email')}
+                  {t('loginScreen.email') + ' '}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -164,25 +163,24 @@ export default function ForgotPasswordScreen() {
                 name="mobileNo"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View style={styles.inputWrapper}>
-                    <Text style={styles.inputLabel}>{t('loginScreen.mobileNumber')}</Text>
-                    <View style={[styles.inputContainer, inputFocused && styles.inputContainerFocused, !!errors.mobileNo && styles.inputContainerError]}>
-                      <Text style={styles.inputPrefix}>+91</Text>
+                    <Text style={styles.inputLabel}>{t('loginScreen.mobileNumber') + ' '}</Text>
+                    <View style={[styles.inputContainer, !!errors.mobileNo && styles.inputContainerError]}>
+                      <Text style={styles.inputPrefix}>+91 </Text>
                       <View style={styles.inputDivider} />
                       <TextInput
                         style={styles.textInput}
-                        placeholder={t('loginScreen.enter10DigitNumber')}
+                        placeholder={t('loginScreen.enter10DigitNumber') + ' '}
                         placeholderTextColor={colors.neutral[400]}
                         keyboardType="phone-pad"
                         maxLength={10}
                         value={value}
                         onChangeText={onChange}
-                        onFocus={() => setInputFocused(true)}
-                        onBlur={() => { setInputFocused(false); onBlur(); }}
+                        onBlur={onBlur}
                         selectionColor={colors.primary.gold}
                       />
                     </View>
                     {!!errors.mobileNo && (
-                      <Text style={styles.errorText}>{errors.mobileNo.message}</Text>
+                      <Text style={styles.errorText}>{errors.mobileNo.message} </Text>
                     )}
                   </View>
                 )}
@@ -196,23 +194,22 @@ export default function ForgotPasswordScreen() {
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View style={styles.inputWrapper}>
-                    <Text style={styles.inputLabel}>{t('loginScreen.email')}</Text>
-                    <View style={[styles.inputContainer, inputFocused && styles.inputContainerFocused, !!errors.email && styles.inputContainerError]}>
+                    <Text style={styles.inputLabel}>{t('loginScreen.email') + ' '}</Text>
+                    <View style={[styles.inputContainer, !!errors.email && styles.inputContainerError]}>
                       <TextInput
                         style={styles.textInput}
-                        placeholder={t('loginScreen.enterEmail')}
+                        placeholder={t('loginScreen.enterEmail') + ' '}
                         placeholderTextColor={colors.neutral[400]}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         value={value}
                         onChangeText={onChange}
-                        onFocus={() => setInputFocused(true)}
-                        onBlur={() => { setInputFocused(false); onBlur(); }}
+                        onBlur={onBlur}
                         selectionColor={colors.primary.gold}
                       />
                     </View>
                     {!!errors.email && (
-                      <Text style={styles.errorText}>{errors.email.message}</Text>
+                      <Text style={styles.errorText}>{errors.email.message} </Text>
                     )}
                   </View>
                 )}
@@ -229,14 +226,14 @@ export default function ForgotPasswordScreen() {
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>{t('forgotPassword.sendOtp')}</Text>
+                <Text style={styles.primaryButtonText}>{t('forgotPassword.sendOtp') + ' '}</Text>
               )}
             </TouchableOpacity>
           </View>
 
           {/* Footer */}
           <Text style={styles.footerText}>
-            {t('loginScreen.securedEncryption')}
+            {t('loginScreen.securedEncryption') + ' '}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -254,7 +251,7 @@ export default function ForgotPasswordScreen() {
           onPress={() => setShowLanguageModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('settings.language')}</Text>
+            <Text style={styles.modalTitle}>{t('settings.language') + ' '}</Text>
             <View style={styles.langRow}>
               {(['en', 'hi', 'mr'] as const).map((l) => (
                 <TouchableOpacity
@@ -264,7 +261,7 @@ export default function ForgotPasswordScreen() {
                   activeOpacity={0.75}
                 >
                   <Text style={[styles.langChipText, language === l && styles.langChipTextActive]}>
-                    {l.toUpperCase()}
+                    {l.toUpperCase() + ' '}
                   </Text>
                 </TouchableOpacity>
               ))}

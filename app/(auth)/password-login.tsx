@@ -37,8 +37,6 @@ export default function PasswordLoginScreen() {
   const setLanguage = useAppStore((s) => s.setLanguage);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [inputMode, setInputMode] = useState<'mobile' | 'email'>('email');
-  const [emailFocused, setEmailFocused] = useState(false);
-  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const onSubmit = async (data: LoginWithPasswordForm) => {
     const value = inputMode === 'mobile' ? data.mobileNo : data.email;
@@ -112,7 +110,7 @@ export default function PasswordLoginScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="language-outline" size={18} color={colors.primary.dark} />
-            <Text style={styles.langBtnText}>{language.toUpperCase()}</Text>
+            <Text style={styles.langBtnText}>{language.toUpperCase() + ' '}</Text>
           </TouchableOpacity>
 
           {/* Back Button */}
@@ -129,14 +127,14 @@ export default function PasswordLoginScreen() {
             <View style={styles.logoMark}>
               <Image source={require('../../assets/SLF_New_Logo_PNG.png')} style={styles.logoImage} />
             </View>
-            <Text style={styles.brandName}>S Lunawat Finance</Text>
-            <Text style={styles.brandTagline}>Your Trusted Lending Partner</Text>
+            <Text style={styles.brandName}>S Lunawat Finance   </Text>
+            <Text style={styles.brandTagline}>Your Trusted Lending Partner   </Text>
           </View>
 
           {/* Card */}
           <View style={styles.card}>
-            <Text style={styles.cardTitle}>{t('passwordLogin.welcomeBack')}</Text>
-            <Text style={styles.cardSubtitle}>{t('passwordLogin.enterCredentials')}</Text>
+            <Text style={styles.cardTitle}>{t('passwordLogin.welcomeBack') + ' '}</Text>
+            <Text style={styles.cardSubtitle}>{t('passwordLogin.enterCredentials') + ' '}</Text>
 
             {/* Mode Toggle */}
             <View style={styles.modeToggle}>
@@ -146,7 +144,7 @@ export default function PasswordLoginScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.modeOptionText, inputMode === 'mobile' && styles.modeOptionTextActive]}>
-                  {t('loginScreen.mobile')}
+                  {t('loginScreen.mobile') + ' '}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -155,7 +153,7 @@ export default function PasswordLoginScreen() {
                 activeOpacity={0.7}
               >
                 <Text style={[styles.modeOptionText, inputMode === 'email' && styles.modeOptionTextActive]}>
-                  {t('loginScreen.email')}
+                  {t('loginScreen.email') + ' '}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -168,24 +166,23 @@ export default function PasswordLoginScreen() {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View style={styles.inputWrapper}>
                     <Text style={styles.inputLabel}>{t('loginScreen.mobileNumber')}</Text>
-                    <View style={[styles.inputContainer, emailFocused && styles.inputContainerFocused, !!errors.mobileNo && styles.inputContainerError]}>
-                      <Text style={styles.inputPrefix}>+91</Text>
+                    <View style={[styles.inputContainer, !!errors.mobileNo && styles.inputContainerError]}>
+                      <Text style={styles.inputPrefix}>+91 </Text>
                       <View style={styles.inputDivider} />
                       <TextInput
                         style={styles.textInput}
-                        placeholder={t('loginScreen.enter10DigitNumber')}
+                        placeholder={t('loginScreen.enter10DigitNumber') + ' '}
                         placeholderTextColor={colors.neutral[400]}
                         keyboardType="phone-pad"
                         maxLength={10}
                         value={value}
                         onChangeText={onChange}
-                        onFocus={() => setEmailFocused(true)}
-                        onBlur={() => { setEmailFocused(false); onBlur(); }}
+                        onBlur={onBlur}
                         selectionColor={colors.primary.gold}
                       />
                     </View>
                     {!!errors.mobileNo && (
-                      <Text style={styles.errorText}>{errors.mobileNo.message}</Text>
+                      <Text style={styles.errorText}>{errors.mobileNo.message}  </Text>
                     )}
                   </View>
                 )}
@@ -199,23 +196,22 @@ export default function PasswordLoginScreen() {
                 name="email"
                 render={({ field: { onChange, onBlur, value } }) => (
                   <View style={styles.inputWrapper}>
-                    <Text style={styles.inputLabel}>{t('loginScreen.email')}</Text>
-                    <View style={[styles.inputContainer, emailFocused && styles.inputContainerFocused, !!errors.email && styles.inputContainerError]}>
+                    <Text style={styles.inputLabel}>{t('loginScreen.email') + ' '}</Text>
+                    <View style={[styles.inputContainer, !!errors.email && styles.inputContainerError]}>
                       <TextInput
                         style={styles.textInput}
-                        placeholder={t('loginScreen.enterEmail')}
+                        placeholder={t('loginScreen.enterEmail') + ' '}
                         placeholderTextColor={colors.neutral[400]}
                         keyboardType="email-address"
                         autoCapitalize="none"
                         value={value}
                         onChangeText={onChange}
-                        onFocus={() => setEmailFocused(true)}
-                        onBlur={() => { setEmailFocused(false); onBlur(); }}
+                        onBlur={onBlur}
                         selectionColor={colors.primary.gold}
                       />
                     </View>
                     {!!errors.email && (
-                      <Text style={styles.errorText}>{errors.email.message}</Text>
+                      <Text style={styles.errorText}>{errors.email.message}  </Text>
                     )}
                   </View>
                 )}
@@ -228,22 +224,21 @@ export default function PasswordLoginScreen() {
               name="password"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.inputLabel}>{t('passwordLogin.password')}</Text>
-                  <View style={[styles.inputContainer, passwordFocused && styles.inputContainerFocused, !!errors.password && styles.inputContainerError]}>
+                  <Text style={styles.inputLabel}>{t('passwordLogin.password') + ' '}</Text>
+                  <View style={[styles.inputContainer, !!errors.password && styles.inputContainerError]}>
                     <TextInput
                       style={styles.textInput}
-                      placeholder={t('passwordLogin.passwordPlaceholder')}
+                      placeholder={t('passwordLogin.passwordPlaceholder') + ' '}
                       placeholderTextColor={colors.neutral[400]}
                       secureTextEntry
                       value={value}
                       onChangeText={onChange}
-                      onFocus={() => setPasswordFocused(true)}
-                      onBlur={() => { setPasswordFocused(false); onBlur(); }}
+                      onBlur={onBlur}
                       selectionColor={colors.primary.gold}
                     />
                   </View>
                   {!!errors.password && (
-                    <Text style={styles.errorText}>{errors.password.message}</Text>
+                    <Text style={styles.errorText}>{errors.password.message}  </Text>
                   )}
                 </View>
               )}
@@ -259,7 +254,7 @@ export default function PasswordLoginScreen() {
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>{t('passwordLogin.login')}</Text>
+                <Text style={styles.primaryButtonText}>{t('passwordLogin.login') + ' '}</Text>
               )}
             </TouchableOpacity>
 
@@ -268,13 +263,13 @@ export default function PasswordLoginScreen() {
               onPress={() => router.push('/(auth)/forgot-password')}
               activeOpacity={0.75}
             >
-              <Text style={styles.forgotText}>{t('passwordLogin.forgotPassword')}</Text>
+              <Text style={styles.forgotText}>{t('passwordLogin.forgotPassword') + ' '}</Text>
             </TouchableOpacity>
           </View>
 
           {/* Footer */}
           <Text style={styles.footerText}>
-            {t('loginScreen.securedEncryption')}
+            {t('loginScreen.securedEncryption') + ' '}
           </Text>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -292,7 +287,7 @@ export default function PasswordLoginScreen() {
           onPress={() => setShowLanguageModal(false)}
         >
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{t('settings.language')}</Text>
+            <Text style={styles.modalTitle}>{t('settings.language') + ' '}</Text>
             <View style={styles.langRow}>
               {(['en', 'hi', 'mr'] as const).map((l) => (
                 <TouchableOpacity
@@ -302,7 +297,7 @@ export default function PasswordLoginScreen() {
                   activeOpacity={0.75}
                 >
                   <Text style={[styles.langChipText, language === l && styles.langChipTextActive]}>
-                    {l.toUpperCase()}
+                    {l.toUpperCase() + ' '}
                   </Text>
                 </TouchableOpacity>
               ))}

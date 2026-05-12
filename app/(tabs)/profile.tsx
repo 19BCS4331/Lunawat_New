@@ -110,13 +110,13 @@ export default function ProfileScreen() {
               <Image source={{ uri: profile.ProfileImage }} style={styles.avatarImage} />
             ) : (
               <Text style={styles.avatarLetter}>
-                {(profile?.Name ?? 'U').charAt(0).toUpperCase()}
+                {(profile?.Name ?? 'U').charAt(0).toUpperCase()}  
               </Text>
             )}
           </View>
           {profile ? (
             <>
-              <Text style={styles.profileName}>{profile.Name}</Text>
+              <Text style={styles.profileName}>{profile.Name}  </Text>
               <Text style={styles.profileMobile}>{profile.MobileNo}</Text>
               {profile.City ? (
                 <Text style={styles.profileCity}>
@@ -125,7 +125,7 @@ export default function ProfileScreen() {
               ) : null}
             </>
           ) : (
-            <Text style={styles.profileName}>{t('profile.customerName')}</Text>
+            <Text style={styles.profileName}>{t('profile.customerName')}  </Text>
           )}
         </View>
 
@@ -134,13 +134,13 @@ export default function ProfileScreen() {
           <View style={styles.infoRow}>
             <View style={styles.infoCard}>
               <Ionicons name="mail-outline" size={16} color={colors.primary.gold} />
-              <Text style={styles.infoLabel}>{t('profile.email')}</Text>
-              <Text style={styles.infoValue} numberOfLines={1}>{profile.Email || '—'}</Text>
+              <Text style={styles.infoLabel}>{t('profile.email')}  </Text>
+              <Text style={styles.infoValue} numberOfLines={1}>{profile.Email || '—'}  </Text>
             </View>
             <View style={styles.infoCard}>
               <Ionicons name="calendar-outline" size={16} color={colors.primary.gold} />
-              <Text style={styles.infoLabel}>{t('profile.dateOfBirth')}</Text>
-              <Text style={styles.infoValue}>{profile.DOB || '—'}</Text>
+              <Text style={styles.infoLabel}>{t('profile.dateOfBirth')}  </Text>
+              <Text style={styles.infoValue}>{profile.DOB || '—'}  </Text>
             </View>
           </View>
         ) : null}
@@ -148,7 +148,7 @@ export default function ProfileScreen() {
         {/* Menu Groups */}
         {menuGroups.map((group) => (
           <View key={group.title} style={styles.group}>
-            <Text style={styles.groupTitle}>{group.title}</Text>
+            <Text style={styles.groupTitle}>{group.title}  </Text>
             <View style={styles.groupCard}>
               {group.rows.map((row, idx) => (
                 <View key={row.id}>
@@ -182,7 +182,7 @@ export default function ProfileScreen() {
         {/* Logout */}
         <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout} activeOpacity={0.85}>
           <Ionicons name="log-out-outline" size={18} color={colors.error} />
-          <Text style={styles.logoutText}>{t('profile.logout')}</Text>
+          <Text style={styles.logoutText}>{t('profile.logout')}  </Text>
         </TouchableOpacity>
 
         <View style={{ height: spacing[6] }} />

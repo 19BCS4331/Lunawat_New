@@ -55,7 +55,7 @@ export default function PaymentHistoryScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.7}>
           <Ionicons name="chevron-back" size={22} color={colors.primary.dark} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('paymentHistory.title')}</Text>
+        <Text style={styles.headerTitle}>{t('paymentHistory.title') + '   '}</Text>
         <View style={{ width: 36 }} />
       </View>
 
@@ -63,24 +63,24 @@ export default function PaymentHistoryScreen() {
       <View style={styles.summaryStrip}>
         <View style={styles.summaryItem}>
           <Text style={styles.summaryValue}>{(online?.length ?? 0) + (offline?.length ?? 0)}</Text>
-          <Text style={styles.summaryLabel}>{t('paymentHistory.total')}</Text>
+          <Text style={styles.summaryLabel}>{t('paymentHistory.total') + '  '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
           <Text style={styles.summaryValue}>{online?.length ?? 0}</Text>
-          <Text style={styles.summaryLabel}>{t('paymentHistory.online')}</Text>
+          <Text style={styles.summaryLabel}>{t('paymentHistory.online') + '  '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
           <Text style={styles.summaryValue}>{offline?.length ?? 0}</Text>
-          <Text style={styles.summaryLabel}>{t('paymentHistory.offline')}</Text>
+          <Text style={styles.summaryLabel}>{t('paymentHistory.offline') + '  '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
           <Text style={styles.summaryValue}>
-            {totalOfflinePaid > 0 ? `₹${(totalOfflinePaid / 1000).toFixed(0)}K` : '—'}
+            {totalOfflinePaid > 0 ? `₹${(totalOfflinePaid / 1000).toFixed(0)}K  ` : '—'}
           </Text>
-          <Text style={styles.summaryLabel}>{t('paymentHistory.totalPaid')}</Text>
+          <Text style={styles.summaryLabel}>{t('paymentHistory.totalPaid') + '  '}</Text>
         </View>
       </View>
 
@@ -93,7 +93,7 @@ export default function PaymentHistoryScreen() {
         >
           <Ionicons name="cash-outline" size={14} color={activeTab === 'offline' ? colors.primary.dark : colors.neutral[400]} />
           <Text style={[styles.tabText, activeTab === 'offline' && styles.tabTextActive]}>
-            {t('paymentHistory.offline')} ({offline?.length ?? 0})
+            {t('paymentHistory.offline') + ' '} ({offline?.length ?? 0})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -103,7 +103,7 @@ export default function PaymentHistoryScreen() {
         >
           <Ionicons name="phone-portrait-outline" size={14} color={activeTab === 'online' ? colors.primary.dark : colors.neutral[400]} />
           <Text style={[styles.tabText, activeTab === 'online' && styles.tabTextActive]}>
-            {t('paymentHistory.online')} ({online?.length ?? 0})
+            {t('paymentHistory.online') + ' '} ({online?.length ?? 0})
           </Text>
         </TouchableOpacity>
       </View>
@@ -111,14 +111,14 @@ export default function PaymentHistoryScreen() {
       {isLoading ? (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={colors.primary.gold} />
-          <Text style={styles.loadingText}>{t('paymentHistory.loading')}</Text>
+          <Text style={styles.loadingText}>{t('paymentHistory.loading') + ' '}</Text>
         </View>
       ) : hasError ? (
         <View style={styles.centered}>
           <Ionicons name="alert-circle-outline" size={44} color={colors.warning} />
-          <Text style={styles.errorText}>{t('paymentHistory.failedToLoad')}</Text>
+          <Text style={styles.errorText}>{t('paymentHistory.failedToLoad') + ' '}</Text>
           <TouchableOpacity style={styles.retryBtn} onPress={onRefresh} activeOpacity={0.8}>
-            <Text style={styles.retryText}>{t('common.retry')}</Text>
+            <Text style={styles.retryText}>{t('common.retry') + ' '}</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -147,10 +147,10 @@ export default function PaymentHistoryScreen() {
                         <Ionicons name={getPaymentIcon(p.PaidBy)} size={20} color={colors.primary.dark} />
                       </View>
                       <View style={styles.cardInfo}>
-                        <Text style={styles.loanNo}>{p.LoanNo}</Text>
-                        <Text style={styles.cardDate}>{p.Date}</Text>
+                        <Text style={styles.loanNo}>{p.LoanNo}   </Text>
+                        <Text style={styles.cardDate}>{p.Date}   </Text>
                       </View>
-                      <Text style={styles.amount}>₹{amt.toLocaleString('en-IN')}</Text>
+                      <Text style={styles.amount}>₹{amt.toLocaleString('en-IN') + ' '}</Text>
                     </View>
 
                     <View style={styles.divider} />
@@ -164,13 +164,13 @@ export default function PaymentHistoryScreen() {
                       <View style={styles.detailItem}>
                         <Text style={styles.detailLabel}>{t('paymentHistory.paidBy')}</Text>
                         <View style={styles.paidByBadge}>
-                          <Text style={styles.paidByText}>{p.PaidBy}</Text>
+                          <Text style={styles.paidByText}>{p.PaidBy}  </Text>
                         </View>
                       </View>
                       {p.PaymentReferenceNo ? (
                         <View style={styles.detailItem}>
-                          <Text style={styles.detailLabel}>{t('paymentHistory.refNo')}</Text>
-                          <Text style={styles.detailValue}>{p.PaymentReferenceNo}</Text>
+                          <Text style={styles.detailLabel}>{t('paymentHistory.refNo') + ' '}</Text>
+                          <Text style={styles.detailValue}>{p.PaymentReferenceNo}  </Text>
                         </View>
                       ) : null}
                     </View>
@@ -183,7 +183,7 @@ export default function PaymentHistoryScreen() {
                         activeOpacity={0.8}
                       >
                         <Ionicons name="document-text-outline" size={14} color={colors.primary.gold} />
-                        <Text style={styles.receiptBtnText}>{t('paymentHistory.viewReceipt')}</Text>
+                        <Text style={styles.receiptBtnText}>{t('paymentHistory.viewReceipt') + '  '}</Text>
                         <Ionicons name="open-outline" size={13} color={colors.primary.gold} />
                       </TouchableOpacity>
                     ) : null}
@@ -195,8 +195,8 @@ export default function PaymentHistoryScreen() {
             !online || online.length === 0 ? (
               <View style={styles.emptyWrap}>
                 <Ionicons name="phone-portrait-outline" size={48} color={colors.neutral[300]} />
-                <Text style={styles.emptyTitle}>{t('paymentHistory.noOnlinePayments')}</Text>
-                <Text style={styles.emptySubtitle}>{t('paymentHistory.noOnlinePaymentsSubtitle')}</Text>
+                <Text style={styles.emptyTitle}>{t('paymentHistory.noOnlinePayments') + ' '}</Text>
+                <Text style={styles.emptySubtitle}>{t('paymentHistory.noOnlinePaymentsSubtitle') + ' '}</Text>
               </View>
             ) : (
               online.map((p: OnlinePayment) => {
@@ -217,11 +217,11 @@ export default function PaymentHistoryScreen() {
                         />
                       </View>
                       <View style={styles.cardInfo}>
-                        <Text style={styles.loanNo}>{p.LoanNo}</Text>
-                        <Text style={styles.cardDate}>{p.Date}{mode ? ` • ${mode}` : ''}</Text>
+                        <Text style={styles.loanNo}>{p.LoanNo}  </Text>
+                        <Text style={styles.cardDate}>{p.Date}{mode ? ` • ${mode}` : ''}  </Text>
                       </View>
                       <View style={styles.amountCol}>
-                        <Text style={styles.amount}>₹{amt.toLocaleString('en-IN')}</Text>
+                        <Text style={styles.amount}>₹{amt.toLocaleString('en-IN')}  </Text>
                         <View style={[styles.statusBadge, isSuccess ? styles.statusSuccess : styles.statusFail]}>
                           <Text style={[styles.statusText, isSuccess ? styles.statusTextSuccess : styles.statusTextFail]}>
                             {isSuccess ? t('paymentHistory.statusSuccess') : t('paymentHistory.statusFailed')}
@@ -236,12 +236,12 @@ export default function PaymentHistoryScreen() {
                       <View style={styles.detailRow}>
                         <View style={styles.detailItem}>
                           <Text style={styles.detailLabel}>{t('paymentHistory.txnId')}</Text>
-                          <Text style={styles.detailValue} numberOfLines={1}>{refId}</Text>
+                          <Text style={styles.detailValue} numberOfLines={1}>{refId}  </Text>
                         </View>
                         {bankRef && bankRef !== refId ? (
                           <View style={styles.detailItem}>
                             <Text style={styles.detailLabel}>{t('paymentHistory.bankRef')}</Text>
-                            <Text style={styles.detailValue} numberOfLines={1}>{bankRef}</Text>
+                            <Text style={styles.detailValue} numberOfLines={1}>{bankRef}  </Text>
                           </View>
                         ) : null}
                       </View>

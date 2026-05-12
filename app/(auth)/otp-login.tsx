@@ -17,7 +17,6 @@ import { useLoginWithOtpForm } from '@/validation';
 import { colors, spacing } from '@/theme';
 import { useLoginWithOtp, useSendLoginOtp } from '@/hooks';
 import { useAuthStore } from '@/store';
-import { useState } from 'react';
 import { useCustomAlert, CustomAlert } from '@/components/alert';
 
 export default function OtpLoginScreen() {
@@ -25,7 +24,6 @@ export default function OtpLoginScreen() {
   const { mobileNo } = useLocalSearchParams<{ mobileNo: string }>();
   const { control, handleSubmit, formState: { errors, isSubmitting }, setError } =
     useLoginWithOtpForm(mobileNo ?? '');
-  const [otpFocused, setOtpFocused] = useState(false);
   const loginWithOtpMutation = useLoginWithOtp();
   const resendOtpMutation = useSendLoginOtp();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -77,19 +75,19 @@ export default function OtpLoginScreen() {
             <View style={styles.logoMark}>
               <Image source={require('../../assets/SLF_New_Logo_PNG.png')} style={styles.logoImage} />
             </View>
-            <Text style={styles.brandName}>S Lunawat Finance</Text>
+            <Text style={styles.brandName}>S Lunawat Finance   </Text>
           </View>
 
           {/* Card */}
           <View style={styles.card}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <Text style={styles.backText}>← Back</Text>
+              <Text style={styles.backText}>← Back  </Text>
             </TouchableOpacity>
 
-            <Text style={styles.cardTitle}>Verify OTP</Text>
+            <Text style={styles.cardTitle}>Verify OTP  </Text>
             <Text style={styles.cardSubtitle}>
               Enter the OTP sent to{'\n'}
-              <Text style={styles.mobileHighlight}>+91 {mobileNo}</Text>
+              <Text style={styles.mobileHighlight}>+91 {mobileNo} </Text>
             </Text>
 
             {/* OTP Input */}
@@ -98,10 +96,9 @@ export default function OtpLoginScreen() {
               name="otp"
               render={({ field: { onChange, onBlur, value } }) => (
                 <View style={styles.inputWrapper}>
-                  <Text style={styles.inputLabel}>One-Time Password</Text>
+                  <Text style={styles.inputLabel}>One-Time Password  </Text>
                   <View style={[
                     styles.inputContainer,
-                    otpFocused && styles.inputContainerFocused,
                     !!errors.otp && styles.inputContainerError,
                   ]}>
                     <TextInput
@@ -112,13 +109,12 @@ export default function OtpLoginScreen() {
                       maxLength={6}
                       value={value}
                       onChangeText={onChange}
-                      onFocus={() => setOtpFocused(true)}
-                      onBlur={() => { setOtpFocused(false); onBlur(); }}
+                      onBlur={onBlur}
                       selectionColor={colors.primary.gold}
                     />
                   </View>
                   {!!errors.otp && (
-                    <Text style={styles.errorText}>{errors.otp.message}</Text>
+                    <Text style={styles.errorText}>{errors.otp.message} </Text>
                   )}
                 </View>
               )}
@@ -134,7 +130,7 @@ export default function OtpLoginScreen() {
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
-                <Text style={styles.primaryButtonText}>Verify & Login</Text>
+                <Text style={styles.primaryButtonText}>Verify & Login  </Text>
               )}
             </TouchableOpacity>
 
@@ -148,12 +144,12 @@ export default function OtpLoginScreen() {
               {resendOtpMutation.isPending ? (
                 <ActivityIndicator color={colors.primary.gold} size="small" />
               ) : (
-                <Text style={styles.resendText}>Didn't receive it? <Text style={styles.resendLink}>Resend OTP</Text></Text>
+                <Text style={styles.resendText}>Didn't receive it? <Text style={styles.resendLink}>Resend OTP  </Text></Text>
               )}
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.footerText}>Secured with 256-bit encryption</Text>
+          <Text style={styles.footerText}>Secured with 256-bit encryption  </Text>
         </ScrollView>
       </KeyboardAvoidingView>
 

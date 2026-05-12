@@ -41,28 +41,28 @@ export default function PaymentsScreen() {
     <SafeAreaView style={styles.safeArea}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('payments.title')}</Text>
+        <Text style={styles.headerTitle}>{t('payments.title') + ' '}</Text>
         <TouchableOpacity
           style={styles.makePayBtn}
           onPress={() => router.push('/payments/make-payment')}
           activeOpacity={0.85}
         >
           <Ionicons name="add" size={18} color={colors.white} />
-          <Text style={styles.makePayText}>{t('payments.payNow')}</Text>
+          <Text style={styles.makePayText}>{t('payments.payNow') + ' '}</Text>
         </TouchableOpacity>
       </View>
 
       {/* Summary Row */}
       <View style={styles.summaryRow}>
         <View style={styles.summaryCard}>
-          <Ionicons name="phone-portrait-outline" size={20} color={colors.primary.gold} />
-          <Text style={styles.summaryCount}>{online?.length ?? 0}</Text>
-          <Text style={styles.summaryLabel}>{t('payments.online')}</Text>
+        <Ionicons name="phone-portrait-outline" size={20} color={colors.primary.gold} />
+          <Text style={styles.summaryCount}>{online?.length ?? 0}  </Text>
+          <Text style={styles.summaryLabel}>{t('payments.online') + '  '}</Text>
         </View>
         <View style={styles.summaryCard}>
           <Ionicons name="cash-outline" size={20} color={colors.neutral[600]} />
-          <Text style={styles.summaryCount}>{offline?.length ?? 0}</Text>
-          <Text style={styles.summaryLabel}>{t('payments.offline')}</Text>
+          <Text style={styles.summaryCount}>{offline?.length ?? 0}  </Text>
+          <Text style={styles.summaryLabel}>{t('payments.offline') + '  '}</Text>
         </View>
       </View>
 
@@ -74,7 +74,7 @@ export default function PaymentsScreen() {
           activeOpacity={0.8}
         >
           <Text style={[styles.tabText, activeTab === 'online' && styles.tabTextActive]}>
-            {t('payments.tabOnline')} ({online?.length ?? 0})
+            {t('payments.tabOnline') + ' '} ({online?.length ?? 0})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -83,7 +83,7 @@ export default function PaymentsScreen() {
           activeOpacity={0.8}
         >
           <Text style={[styles.tabText, activeTab === 'offline' && styles.tabTextActive]}>
-            {t('payments.tabOffline')} ({offline?.length ?? 0})
+            {t('payments.tabOffline') + ' '} ({offline?.length ?? 0})
           </Text>
         </TouchableOpacity>
       </View>
@@ -103,7 +103,7 @@ export default function PaymentsScreen() {
           {displayed.length === 0 ? (
             <View style={styles.emptyCard}>
               <Ionicons name="receipt-outline" size={44} color={colors.neutral[300]} />
-              <Text style={styles.emptyTitle}>{activeTab === 'online' ? t('payments.noOnlinePayments') : t('payments.noOfflinePayments')}</Text>
+              <Text style={styles.emptyTitle}>{activeTab === 'online' ? t('payments.noOnlinePayments') + ' ' : t('payments.noOfflinePayments') + ' '}</Text>
             </View>
           ) : activeTab === 'online' ? (
             (displayed as OnlinePayment[]).map((p) => {
@@ -122,20 +122,20 @@ export default function PaymentsScreen() {
                       />
                     </View>
                     <View style={styles.cardInfo}>
-                      <Text style={styles.cardLoanNo}>{p.LoanNo}</Text>
-                      <Text style={styles.cardDate}>{p.Date}{mode ? ` • ${mode}` : ''}</Text>
+                      <Text style={styles.cardLoanNo}>{p.LoanNo}  </Text>
+                      <Text style={styles.cardDate}>{p.Date}{mode ? ` • ${mode}` : ''}  </Text>
                     </View>
                     <View style={styles.cardRight}>
-                      <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}</Text>
+                      <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
                       <View style={[styles.statusBadge, isSuccess ? styles.statusSuccess : styles.statusFail]}>
                         <Text style={[styles.statusText, isSuccess ? styles.statusTextSuccess : styles.statusTextFail]}>
-                          {isSuccess ? t('payments.statusSuccess') : t('payments.statusFailed')}
+                          {isSuccess ? t('payments.statusSuccess') + ' ' : t('payments.statusFailed') + ' '}
                         </Text>
                       </View>
                     </View>
                   </View>
                   {refId ? (
-                    <Text style={styles.refId} numberOfLines={1}>{t('payments.ref')}: {refId}</Text>
+                    <Text style={styles.refId} numberOfLines={1}>{t('payments.ref')}: {refId}  </Text>
                   ) : null}
                 </View>
               );
@@ -148,14 +148,14 @@ export default function PaymentsScreen() {
                     <Ionicons name="cash-outline" size={22} color={colors.neutral[600]} />
                   </View>
                   <View style={styles.cardInfo}>
-                    <Text style={styles.cardLoanNo}>{p.LoanNo}</Text>
-                    <Text style={styles.cardDate}>{p.Date} • {p.PaidBy}</Text>
+                    <Text style={styles.cardLoanNo}>{p.LoanNo}  </Text>
+                    <Text style={styles.cardDate}>{p.Date} • {p.PaidBy}  </Text>
                   </View>
                   <View style={styles.cardRight}>
-                    <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}</Text>
+                    <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
                     {p.ReceiptNo ? (
                       <View style={styles.statusBadge}>
-                        <Text style={styles.receiptText}>{p.ReceiptNo}</Text>
+                        <Text style={styles.receiptText}>{p.ReceiptNo}  </Text>
                       </View>
                     ) : null}
                   </View>

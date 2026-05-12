@@ -143,7 +143,7 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
         onPress={() => handleButtonPress(button)}
         activeOpacity={0.7}
       >
-        <Text style={textStyle}>{button.text}</Text>
+        <Text style={textStyle}>{button.text}  </Text>
       </TouchableOpacity>
     );
   };
@@ -172,10 +172,10 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.title}>{title}  </Text>
 
           {/* Message */}
-          {message && <Text style={styles.message}>{message}</Text>}
+          {message && <Text style={styles.message}>{message}  </Text>}
 
           {/* Buttons */}
           <View style={styles.buttonContainer}>
@@ -187,7 +187,7 @@ const CustomAlert: React.FC<CustomAlertProps> = ({
                 onPress={onClose}
                 activeOpacity={0.7}
               >
-                <Text style={styles.buttonText}>OK</Text>
+                <Text style={styles.buttonText}>OK  </Text>
               </TouchableOpacity>
             )}
           </View>

@@ -24,7 +24,7 @@ export default function ChangePasswordScreen() {
 
   const handleSendOTP = async () => {
     if (!mobileNo || mobileNo.length !== 10) {
-      alert(t('changePassword.alertInvalidMobile'), t('changePassword.alertInvalidMobileBody'));
+      alert(t('changePassword.alertInvalidMobile') + ' ', t('changePassword.alertInvalidMobileBody') + ' ');
       return;
     }
 
@@ -93,8 +93,8 @@ export default function ChangePasswordScreen() {
           <View style={styles.iconWrap}>
             <Ionicons name="lock-closed" size={36} color={colors.white} />
           </View>
-          <Text style={styles.title}>{t('changePassword.title')}</Text>
-          <Text style={styles.subtitle}>{t('changePassword.subtitle')}</Text>
+          <Text style={styles.title}>{t('changePassword.title') + ' '}  </Text>
+          <Text style={styles.subtitle}>{t('changePassword.subtitle') + ' '}  </Text>
         </View>
 
         {/* Step indicator */}
@@ -106,7 +106,7 @@ export default function ChangePasswordScreen() {
 
         {step === 'send-otp' && (
           <Card variant="outlined" style={styles.card}>
-            <Text style={styles.stepTitle}>{t('changePassword.step1Title')}</Text>
+            <Text style={styles.stepTitle}>{t('changePassword.step1Title')}  </Text>
             <Input
               label={t('changePassword.mobileNumber')}
               placeholder={t('changePassword.mobileNumberPlaceholder')}
@@ -116,7 +116,7 @@ export default function ChangePasswordScreen() {
               maxLength={10}
             />
             <Button
-              title={t('changePassword.sendOtp')}
+              title={t('changePassword.sendOtp') + ' '}
               onPress={handleSendOTP}
               loading={sendOTP.isPending}
               style={{ marginTop: spacing[4] }}
@@ -126,7 +126,7 @@ export default function ChangePasswordScreen() {
 
         {step === 'verify-otp' && (
           <Card variant="outlined" style={styles.card}>
-            <Text style={styles.stepTitle}>{t('changePassword.step2Title')}</Text>
+            <Text style={styles.stepTitle}>{t('changePassword.step2Title')}  </Text>
             <Text style={styles.infoText}>
               {t('changePassword.otpSentTo', { mobile: mobileNo })}
             </Text>
@@ -139,7 +139,7 @@ export default function ChangePasswordScreen() {
               maxLength={6}
             />
             <Button
-              title={t('changePassword.verifyOtp')}
+              title={t('changePassword.verifyOtp') + ' '}
               onPress={handleVerifyOTP}
               loading={false}
               style={{ marginTop: spacing[4] }}
@@ -149,14 +149,14 @@ export default function ChangePasswordScreen() {
               style={styles.linkBtn}
               activeOpacity={0.7}
             >
-              <Text style={styles.linkText}>{t('changePassword.changeMobileNumber')}</Text>
+              <Text style={styles.linkText}>{t('changePassword.changeMobileNumber') + ' '}  </Text>
             </TouchableOpacity>
           </Card>
         )}
 
         {step === 'new-password' && (
           <Card variant="outlined" style={styles.card}>
-            <Text style={styles.stepTitle}>{t('changePassword.step3Title')}</Text>
+            <Text style={styles.stepTitle}>{t('changePassword.step3Title')}  </Text>
             <Input
               label={t('changePassword.newPassword')}
               placeholder={t('changePassword.newPasswordPlaceholder')}
@@ -172,7 +172,7 @@ export default function ChangePasswordScreen() {
               secureTextEntry
             />
             <Button
-              title={t('changePassword.changePasswordBtn')}
+              title={t('changePassword.changePasswordBtn') + '  '}
               onPress={handleChangePassword}
               loading={changePassword.isPending}
               style={{ marginTop: spacing[4] }}

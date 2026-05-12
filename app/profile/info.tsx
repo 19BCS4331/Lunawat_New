@@ -34,13 +34,13 @@ export default function InfoScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1, padding: spacing[6] }}>
         <Pressable onPress={() => router.back()} style={{ marginBottom: spacing[4] }}>
           <Text style={{ fontSize: 16, color: colors.primary.gold, fontWeight: '600' }}>
-            ← Back
+            ← Back  
           </Text>
         </Pressable>
 
         <View style={{ marginBottom: spacing[6] }}>
           <Text style={{ fontSize: 28, fontWeight: '700', color: colors.neutral[900], marginBottom: spacing[1] }}>
-            Info & Support
+            Info & Support  
           </Text>
           <Text style={{ fontSize: 16, color: colors.neutral[600] }}>
             App information and help
@@ -48,7 +48,7 @@ export default function InfoScreen() {
         </View>
 
         <Text style={{ fontSize: 18, fontWeight: '600', color: colors.neutral[900], marginBottom: spacing[4] }}>
-          Legal
+          Legal  
         </Text>
 
         <Card variant="outlined" style={{ marginBottom: spacing[6], padding: spacing[4] }}>
@@ -70,7 +70,7 @@ export default function InfoScreen() {
         </Card>
 
         <Text style={{ fontSize: 18, fontWeight: '600', color: colors.neutral[900], marginBottom: spacing[4] }}>
-          Support
+          Support  
         </Text>
 
         <Card variant="outlined" style={{ marginBottom: spacing[6], padding: spacing[4] }}>
@@ -99,19 +99,19 @@ export default function InfoScreen() {
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[3] }}>
             <Text style={{ fontSize: 14, color: colors.neutral[600] }}>App Version</Text>
             <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-              {appVersion}
+              {appVersion}  
             </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing[3] }}>
             <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Build Number</Text>
             <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-              {Constants.nativeAppVersion || '1'}
+              {Constants.nativeAppVersion || '1'}  
             </Text>
           </View>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <Text style={{ fontSize: 14, color: colors.neutral[600] }}>Platform</Text>
             <Text style={{ fontSize: 14, fontWeight: '600', color: colors.neutral[900] }}>
-              {Constants.platform?.ios ? 'iOS' : 'Android'}
+              {Constants.platform?.ios ? 'iOS' : 'Android'}  
             </Text>
           </View>
         </Card>

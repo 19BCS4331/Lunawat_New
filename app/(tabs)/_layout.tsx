@@ -2,6 +2,7 @@ import { Tabs } from 'expo-router';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -26,19 +27,25 @@ function TabIcon({ focused, icon, iconFocused, label }: TabIconProps) {
 }
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: styles.tabBar,
+        tabBarStyle: {
+          ...styles.tabBar,
+          paddingBottom: Platform.OS === 'ios' ? insets.bottom : Math.max(insets.bottom, 6),
+          height: Platform.OS === 'ios' ? 88 + insets.bottom : 72 + Math.max(insets.bottom, 6),
+        },
       }}
     >
       <Tabs.Screen
         name="dashboard"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon="home-outline" iconFocused="home" label="Home" />
+            <TabIcon focused={focused} icon="home-outline" iconFocused="home" label="Home " />
           ),
         }}
       />
@@ -46,7 +53,7 @@ export default function TabsLayout() {
         name="loans"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon="document-text-outline" iconFocused="document-text" label="Loans" />
+            <TabIcon focused={focused} icon="document-text-outline" iconFocused="document-text" label="Loans " />
           ),
         }}
       />
@@ -54,7 +61,7 @@ export default function TabsLayout() {
         name="payments"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon="card-outline" iconFocused="card" label="Pay" />
+            <TabIcon focused={focused} icon="card-outline" iconFocused="card" label="Pay " />
           ),
         }}
       />
@@ -62,7 +69,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon="person-outline" iconFocused="person" label="Profile" />
+            <TabIcon focused={focused} icon="person-outline" iconFocused="person" label="Profile " />
           ),
         }}
       />
