@@ -47,6 +47,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         backgroundColor: '#FDFBF5',
       },
     ],
+    [
+      'expo-asset',
+      {
+        icon: './assets/SLF_New_Logo_PNG.png',
+      },
+    ],
   ],
   extra: {
     eas: {
