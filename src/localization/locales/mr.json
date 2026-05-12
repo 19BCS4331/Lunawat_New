@@ -225,7 +225,9 @@
     "alertFailedTitle": "देयके अयशस्वी",
     "alertFailedBody": "देयके प्रक्रिया करता आले नाही.",
     "alertTokenErrorTitle": "त्रुटी",
-    "alertTokenErrorBody": "देयके टोकन जनरेट करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा."
+    "alertTokenErrorBody": "देयके टोकन जनरेट करण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा.",
+    "noUpiAppTitle": "कोणतेही UPI अॅप आढळले नाही",
+    "noUpiAppBody": "UPI देयके करण्यासाठी कृपया एक UPI अॅप (Google Pay, PhonePe, Paytm, किंवा BHIM) इंस्टॉल करा."
   },
   "loansIndex": {
     "title": "माझी कर्ज",

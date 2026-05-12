@@ -7,6 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '1.0.0',
   orientation: 'portrait',
   scheme: 'lunawat',
+  icon: './assets/SLF_New_Logo_PNG.png',
   userInterfaceStyle: 'light',
   assetBundlePatterns: ['**/*'],
   ios: {
@@ -21,6 +22,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: 'com.lunawat.finance',
     versionCode: 1,
+    adaptiveIcon: {
+      foregroundImage: './assets/SLF_New_Logo_PNG.png',
+      backgroundColor: '#FDFBF5',
+    },
     permissions: [
       'INTERNET',
       'ACCESS_NETWORK_STATE',
@@ -43,14 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         image: './assets/SLF_Splash.png',
         imageWidth: 1080,
-        imageHeight: 1920,
         backgroundColor: '#FDFBF5',
-      },
-    ],
-    [
-      'expo-asset',
-      {
-        icon: './assets/SLF_New_Logo_PNG.png',
       },
     ],
   ],

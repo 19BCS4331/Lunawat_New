@@ -225,7 +225,9 @@
     "alertFailedTitle": "Payment Failed",
     "alertFailedBody": "Payment could not be processed.",
     "alertTokenErrorTitle": "Error",
-    "alertTokenErrorBody": "Failed to generate payment token. Please try again."
+    "alertTokenErrorBody": "Failed to generate payment token. Please try again.",
+    "noUpiAppTitle": "No UPI App Found",
+    "noUpiAppBody": "Please install a UPI app (Google Pay, PhonePe, Paytm, or BHIM) to make UPI payments."
   },
   "loansIndex": {
     "title": "My Loans",

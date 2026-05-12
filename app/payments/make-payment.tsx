@@ -10,6 +10,7 @@ import {
   AppState,
   KeyboardAvoidingView,
   Platform,
+  Linking,
 } from 'react-native';
 import type { AppStateStatus } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -198,7 +199,29 @@ export default function MakePaymentScreen() {
           mixedContentMode="always"
           allowsInlineMediaPlayback
           allowUniversalAccessFromFileURLs
-          onNavigationStateChange={(ns) => billDeskHandler.current?.handleNavigationStateChange(ns)}
+          onNavigationStateChange={(ns) => {
+            billDeskHandler.current?.handleNavigationStateChange(ns);
+            // Intercept merchant site callback (POST redirect landing)
+            if (ns.url && (ns.url.includes('/PGResponse') || ns.url.includes('myloan.slunawat.com'))) {
+              if (__DEV__) console.log('[BillDesk WebView] Merchant callback detected, navigating back');
+              router.back();
+            }
+          }}
+          onShouldStartLoadWithRequest={(request) => {
+            const url = request.url;
+            // Handle custom URL schemes (UPI, intent, etc.)
+            if (url.startsWith('upi://') || url.startsWith('intent://') || url.startsWith('bhim://') || url.startsWith('paytm://')) {
+              Linking.openURL(url).catch((err) => {
+                if (__DEV__) console.error('[BillDesk WebView] Failed to open custom URL:', err);
+                // Show user-friendly error if no UPI app is installed
+                alert(
+                  (t('makePayment.noUpiAppTitle') || 'No UPI App Found') + ' ' + (t('makePayment.noUpiAppBody') || 'Please install a UPI app (Google Pay, PhonePe, Paytm, or BHIM) to make UPI payments.')
+                );
+              });
+              return false;
+            }
+            return true;
+          }}
           onMessage={(e) => {
             try {
               const data = JSON.parse(e.nativeEvent.data) as { type: string; msg?: string };
@@ -219,6 +242,11 @@ export default function MakePaymentScreen() {
           }}
           onHttpError={(e) => {
             if (__DEV__) console.error('[BillDesk WebView] HTTP error:', e.nativeEvent.statusCode, e.nativeEvent.url);
+            // If merchant callback returns an error, navigate back to payments
+            if (e.nativeEvent.url?.includes('/PGResponse') || e.nativeEvent.url?.includes('myloan.slunawat.com')) {
+              if (__DEV__) console.log('[BillDesk WebView] Merchant callback HTTP error, navigating back');
+              router.back();
+            }
           }}
           onLoad={() => {
             if (__DEV__) console.log('[BillDesk WebView] page loaded');

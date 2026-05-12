@@ -225,7 +225,9 @@
     "alertFailedTitle": "भुगतान विफल",
     "alertFailedBody": "भुगतान संसाधित नहीं किया जा सका।",
     "alertTokenErrorTitle": "त्रुटि",
-    "alertTokenErrorBody": "भुगतान टोकन जनरेट करने में विफल। कृपया पुनः प्रयास करें।"
+    "alertTokenErrorBody": "भुगतान टोकन जनरेट करने में विफल। कृपया पुनः प्रयास करें।",
+    "noUpiAppTitle": "कोई UPI ऐप नहीं मिली",
+    "noUpiAppBody": "UPI भुगतान करने के लिए कृपया एक UPI ऐप (Google Pay, PhonePe, Paytm, या BHIM) इंस्टॉल करें।"
   },
   "loansIndex": {
     "title": "मेरे ऋण",
