@@ -46,8 +46,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        image: './assets/SLF_Splash.png',
-        imageWidth: 1080,
+        image: './assets/SLF_New_Logo_PNG.png',
+        imageWidth: 200,
         backgroundColor: '#FDFBF5',
       },
     ],
