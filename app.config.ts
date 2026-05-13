@@ -59,7 +59,5 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     API_BASE_URL: process.env.API_BASE_URL || 'https://a837-122-169-52-6.ngrok-free.app',
     ENV: process.env.ENV || 'development',
   },
-  runtimeVersion: {
-    policy: 'appVersion',
-  },
+  runtimeVersion: '1.0.0',
 });

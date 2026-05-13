@@ -35,5 +35,5 @@ app.listen(PORT, () => {
   console.log('   POST /OfflinePaymentHistory');
   console.log('');
   console.log('✨ Gateway ready to accept requests');
-  console.log('');
+  console.log('Testing Cloud Run Deploy');
 });
