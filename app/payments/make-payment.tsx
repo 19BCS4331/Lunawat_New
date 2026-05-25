@@ -460,7 +460,7 @@ export default function MakePaymentScreen() {
                 <View style={styles.breakdownRow}>
                   <Text style={styles.breakdownLabel}>{t('makePayment.interestDays', { days: calculation.payingIntDays })}</Text>
                   <Text style={styles.breakdownValue}>
-                    ₹{(calculation.payingIntDays * calculation.interestPerDay).toLocaleString('en-IN', { maximumFractionDigits: 2 })}  
+                    ₹{(Math.ceil((calculation.payingIntDays * calculation.interestPerDay) / 10) * 10).toLocaleString('en-IN')}  
                   </Text>
                 </View>
               )}

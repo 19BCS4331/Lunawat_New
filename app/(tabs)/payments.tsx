@@ -1,20 +1,20 @@
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
   RefreshControl,
 } from 'react-native';
+import { FlashList } from '@shopify/flash-list';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing } from '@/theme';
-import { useOnlinePaymentHistory, useOfflinePaymentHistory } from '@/hooks';
-import type { OnlinePayment, OfflinePayment } from '@/types';
-import { useState } from 'react';
+import { useOnlinePaymentHistory, useOfflinePaymentHistory, useMyLoans } from '@/hooks';
+import type { OnlinePayment, OfflinePayment, Loan } from '@/types';
+import { useState, useMemo } from 'react';
 
 type Tab = 'online' | 'offline';
 
@@ -24,18 +24,32 @@ export default function PaymentsScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('online');
   const [refreshing, setRefreshing] = useState(false);
 
+  const { data: loans } = useMyLoans();
   const { data: online, isLoading: onlineLoading, refetch: refetchOnline } = useOnlinePaymentHistory();
   const { data: offline, isLoading: offlineLoading, refetch: refetchOffline } = useOfflinePaymentHistory();
 
   const isLoading = onlineLoading || offlineLoading;
+
+  const openLoanNos = useMemo<Set<string>>(
+    () => new Set((loans ?? []).filter((l: Loan) => l.LoanStatus === 'Open').map((l: Loan) => l.LoanNo)),
+    [loans],
+  );
+
+  const filteredOnline = useMemo(
+    () => (online ?? []).filter((p: OnlinePayment) => openLoanNos.has(p.LoanNo)),
+    [online, openLoanNos],
+  );
+
+  const filteredOffline = useMemo(
+    () => (offline ?? []).filter((p: OfflinePayment) => openLoanNos.has(p.LoanNo)),
+    [offline, openLoanNos],
+  );
 
   const onRefresh = async () => {
     setRefreshing(true);
     await Promise.all([refetchOnline(), refetchOffline()]);
     setRefreshing(false);
   };
-
-  const displayed = activeTab === 'online' ? (online ?? []) : (offline ?? []);
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -55,13 +69,13 @@ export default function PaymentsScreen() {
       {/* Summary Row */}
       <View style={styles.summaryRow}>
         <View style={styles.summaryCard}>
-        <Ionicons name="phone-portrait-outline" size={20} color={colors.primary.gold} />
-          <Text style={styles.summaryCount}>{online?.length ?? 0}  </Text>
+          <Ionicons name="phone-portrait-outline" size={20} color={colors.primary.gold} />
+          <Text style={styles.summaryCount}>{filteredOnline.length}  </Text>
           <Text style={styles.summaryLabel}>{t('payments.online') + '  '}</Text>
         </View>
         <View style={styles.summaryCard}>
           <Ionicons name="cash-outline" size={20} color={colors.neutral[600]} />
-          <Text style={styles.summaryCount}>{offline?.length ?? 0}  </Text>
+          <Text style={styles.summaryCount}>{filteredOffline.length}  </Text>
           <Text style={styles.summaryLabel}>{t('payments.offline') + '  '}</Text>
         </View>
       </View>
@@ -74,7 +88,7 @@ export default function PaymentsScreen() {
           activeOpacity={0.8}
         >
           <Text style={[styles.tabText, activeTab === 'online' && styles.tabTextActive]}>
-            {t('payments.tabOnline') + ' '} ({online?.length ?? 0})
+            {t('payments.tabOnline') + ' '} ({filteredOnline.length})
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -83,7 +97,7 @@ export default function PaymentsScreen() {
           activeOpacity={0.8}
         >
           <Text style={[styles.tabText, activeTab === 'offline' && styles.tabTextActive]}>
-            {t('payments.tabOffline') + ' '} ({offline?.length ?? 0})
+            {t('payments.tabOffline') + ' '} ({filteredOffline.length})
           </Text>
         </TouchableOpacity>
       </View>
@@ -92,79 +106,95 @@ export default function PaymentsScreen() {
         <View style={styles.centered}>
           <ActivityIndicator size="large" color={colors.primary.gold} />
         </View>
-      ) : (
-        <ScrollView
+      ) : activeTab === 'online' ? (
+        <FlashList
+          data={filteredOnline}
+          keyExtractor={(item) => String(item.ID)}
+          renderItem={({ item: p }: { item: OnlinePayment }) => {
+            const isSuccess = p.Status?.toLowerCase() === 'success';
+            const txn = p.parsedResponseCode;
+            const mode = (p.Mode ?? txn?.payment_method_type ?? '').toUpperCase();
+            const refId = p.TransactionRefID ?? txn?.transactionid ?? txn?.bank_ref_no ?? null;
+            return (
+              <View style={styles.card}>
+                <View style={styles.cardRow}>
+                  <View style={[styles.iconWrap, isSuccess ? styles.iconSuccess : styles.iconFail]}>
+                    <Ionicons
+                      name={isSuccess ? 'checkmark-circle' : 'close-circle'}
+                      size={22}
+                      color={isSuccess ? '#2E7D32' : colors.error}
+                    />
+                  </View>
+                  <View style={styles.cardInfo}>
+                    <Text style={styles.cardLoanNo}>{p.LoanNo}  </Text>
+                    <Text style={styles.cardDate}>{p.Date}{mode ? ` • ${mode}` : ''}  </Text>
+                  </View>
+                  <View style={styles.cardRight}>
+                    <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
+                    <View style={[styles.statusBadge, isSuccess ? styles.statusSuccess : styles.statusFail]}>
+                      <Text style={[styles.statusText, isSuccess ? styles.statusTextSuccess : styles.statusTextFail]}>
+                        {isSuccess ? t('payments.statusSuccess') + ' ' : t('payments.statusFailed') + ' '}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                {refId ? (
+                  <Text style={styles.refId} numberOfLines={1}>{t('payments.ref')}: {refId}  </Text>
+                ) : null}
+              </View>
+            );
+          }}
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary.gold} colors={[colors.primary.gold]} />
           }
-        >
-          {displayed.length === 0 ? (
+          ListEmptyComponent={
             <View style={styles.emptyCard}>
               <Ionicons name="receipt-outline" size={44} color={colors.neutral[300]} />
-              <Text style={styles.emptyTitle}>{activeTab === 'online' ? t('payments.noOnlinePayments') + ' ' : t('payments.noOfflinePayments') + ' '}</Text>
+              <Text style={styles.emptyTitle}>{t('payments.noOnlinePayments')}   </Text>
             </View>
-          ) : activeTab === 'online' ? (
-            (displayed as OnlinePayment[]).map((p) => {
-              const isSuccess = p.Status?.toLowerCase() === 'success';
-              const txn = p.parsedResponseCode;
-              const mode = (p.Mode ?? txn?.payment_method_type ?? '').toUpperCase();
-              const refId = p.TransactionRefID ?? txn?.transactionid ?? txn?.bank_ref_no ?? null;
-              return (
-                <View key={p.ID} style={styles.card}>
-                  <View style={styles.cardRow}>
-                    <View style={[styles.iconWrap, isSuccess ? styles.iconSuccess : styles.iconFail]}>
-                      <Ionicons
-                        name={isSuccess ? 'checkmark-circle' : 'close-circle'}
-                        size={22}
-                        color={isSuccess ? '#2E7D32' : colors.error}
-                      />
+          }
+          ListFooterComponent={<View style={{ height: spacing[4] }} />}
+        />
+      ) : (
+        <FlashList
+          data={filteredOffline}
+          keyExtractor={(item) => String(item.ID)}
+          renderItem={({ item: p }: { item: OfflinePayment }) => (
+            <View style={styles.card}>
+              <View style={styles.cardRow}>
+                <View style={[styles.iconWrap, styles.iconOffline]}>
+                  <Ionicons name="cash-outline" size={22} color={colors.neutral[600]} />
+                </View>
+                <View style={styles.cardInfo}>
+                  <Text style={styles.cardLoanNo}>{p.LoanNo}  </Text>
+                  <Text style={styles.cardDate}>{p.Date} • {p.PaidBy}  </Text>
+                </View>
+                <View style={styles.cardRight}>
+                  <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
+                  {p.ReceiptNo ? (
+                    <View style={styles.statusBadge}>
+                      <Text style={styles.receiptText}>{p.ReceiptNo}  </Text>
                     </View>
-                    <View style={styles.cardInfo}>
-                      <Text style={styles.cardLoanNo}>{p.LoanNo}  </Text>
-                      <Text style={styles.cardDate}>{p.Date}{mode ? ` • ${mode}` : ''}  </Text>
-                    </View>
-                    <View style={styles.cardRight}>
-                      <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
-                      <View style={[styles.statusBadge, isSuccess ? styles.statusSuccess : styles.statusFail]}>
-                        <Text style={[styles.statusText, isSuccess ? styles.statusTextSuccess : styles.statusTextFail]}>
-                          {isSuccess ? t('payments.statusSuccess') + ' ' : t('payments.statusFailed') + ' '}
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  {refId ? (
-                    <Text style={styles.refId} numberOfLines={1}>{t('payments.ref')}: {refId}  </Text>
                   ) : null}
                 </View>
-              );
-            })
-          ) : (
-            (displayed as OfflinePayment[]).map((p) => (
-              <View key={p.ID} style={styles.card}>
-                <View style={styles.cardRow}>
-                  <View style={[styles.iconWrap, styles.iconOffline]}>
-                    <Ionicons name="cash-outline" size={22} color={colors.neutral[600]} />
-                  </View>
-                  <View style={styles.cardInfo}>
-                    <Text style={styles.cardLoanNo}>{p.LoanNo}  </Text>
-                    <Text style={styles.cardDate}>{p.Date} • {p.PaidBy}  </Text>
-                  </View>
-                  <View style={styles.cardRight}>
-                    <Text style={styles.cardAmount}>₹{parseFloat(p.Amount || '0').toLocaleString('en-IN')}  </Text>
-                    {p.ReceiptNo ? (
-                      <View style={styles.statusBadge}>
-                        <Text style={styles.receiptText}>{p.ReceiptNo}  </Text>
-                      </View>
-                    ) : null}
-                  </View>
-                </View>
               </View>
-            ))
+            </View>
           )}
-          <View style={{ height: spacing[4] }} />
-        </ScrollView>
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary.gold} colors={[colors.primary.gold]} />
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyCard}>
+              <Ionicons name="receipt-outline" size={44} color={colors.neutral[300]} />
+              <Text style={styles.emptyTitle}>{t('payments.noOfflinePayments')}   </Text>
+            </View>
+          }
+          ListFooterComponent={<View style={{ height: spacing[4] }} />}
+        />
       )}
     </SafeAreaView>
   );

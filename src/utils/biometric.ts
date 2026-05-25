@@ -75,8 +75,8 @@ export class BiometricAuth {
         promptMessage,
         fallbackLabel: 'Use passcode',
         cancelLabel: 'Cancel',
-        disableDeviceFallback: false,
-        requireConfirmation: Platform.OS === 'android',
+        disableDeviceFallback: true,
+        requireConfirmation: false,
       });
 
       if (result.success) {

@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import { API_BASE_URL, API_TIMEOUT } from '@/constants';
 import { secureStorage } from '@/utils';
+import { router } from 'expo-router';
 
 class ApiClient {
   private client: AxiosInstance;
@@ -124,45 +125,36 @@ class ApiClient {
   }
 
   private async refreshToken(): Promise<string | null> {
-    try {
-      const userId = await secureStorage.getItem('user_id');
-      if (!userId) {
-        return null;
-      }
-
-      // Call refresh token endpoint
-      const response = await this.client.post('/auth/refresh-token', { userId });
-      
-      if (response.data?.accessToken) {
-        const newToken = response.data.accessToken;
-        await secureStorage.setItem('access_token', newToken);
-        return newToken;
-      }
-      
-      return null;
-    } catch (error) {
-      if (__DEV__) {
-        console.error('❌ Token refresh failed:', error);
-      }
-      return null;
+    const userId = await secureStorage.getItem('user_id');
+    if (!userId) {
+      throw new Error('No userId — cannot refresh token');
     }
+
+    const response = await this.client.post('/auth/refresh-token', { userId });
+
+    if (response.data?.accessToken) {
+      const newToken = response.data.accessToken as string;
+      await secureStorage.setItem('access_token', newToken);
+      return newToken;
+    }
+
+    throw new Error('Refresh token response missing accessToken');
   }
 
   private async handleAuthError(): Promise<void> {
-    // Clear all auth data
-    await secureStorage.deleteItem('access_token');
-    await secureStorage.deleteItem('user_id');
-    await secureStorage.deleteItem('refresh_token');
-    
-    // Clear auth store state
-    // This would be handled by a navigation service or auth store
-    // For now, we'll just clear the tokens
-    
-    // TODO: Navigate to login screen
-    // This should be handled by the app's navigation logic
-    if (__DEV__) {
-      console.log('🔓 Auth error - clearing tokens and redirecting to login');
-    }
+    // Clear tokens from SecureStore
+    await Promise.all([
+      secureStorage.deleteItem('access_token'),
+      secureStorage.deleteItem('user_id'),
+      secureStorage.deleteItem('refresh_token'),
+    ]);
+
+    // Clear Zustand auth state — lazy import avoids circular dependency
+    const { useAuthStore } = await import('@/store/auth.store');
+    useAuthStore.getState().clearAuth();
+
+    // Navigate to login — expo-router imperative API
+    router.replace('/(auth)/login');
   }
 
   public getClient(): AxiosInstance {

@@ -18,6 +18,9 @@ import { colors, spacing } from '@/theme';
 import { useLoginWithOtp, useSendLoginOtp } from '@/hooks';
 import { useAuthStore } from '@/store';
 import { useCustomAlert, CustomAlert } from '@/components/alert';
+import { LinearGradient } from 'expo-linear-gradient';
+import { haptics } from '@/utils/haptics';
+import { PressableScale } from '@/components/pressable-scale';
 
 export default function OtpLoginScreen() {
   const router = useRouter();
@@ -38,7 +41,7 @@ export default function OtpLoginScreen() {
           otp: data.otp,
         });
         setAuth(result.accessToken, result.userId);
-        router.replace('/(tabs)/dashboard');
+        router.replace('/(auth)/setup-security');
       } catch {
         setError('otp', { message: 'Invalid OTP. Please try again.' });
       }
@@ -56,6 +59,12 @@ export default function OtpLoginScreen() {
   };
 
   return (
+    <LinearGradient
+      colors={['#FFF9F0', '#FDFBF5', '#FFF8E7']}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -121,18 +130,18 @@ export default function OtpLoginScreen() {
             />
 
             {/* Verify Button */}
-            <TouchableOpacity
+            <PressableScale
+              scale={0.97}
               style={[styles.primaryButton, isSubmitting && styles.primaryButtonDisabled]}
-              onPress={onSubmit}
+              onPress={() => { haptics.medium(); onSubmit(); }}
               disabled={isSubmitting}
-              activeOpacity={0.82}
             >
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
                 <Text style={styles.primaryButtonText}>Verify & Login  </Text>
               )}
-            </TouchableOpacity>
+            </PressableScale>
 
             {/* Resend */}
             <TouchableOpacity
@@ -155,11 +164,13 @@ export default function OtpLoginScreen() {
 
       {alertState && <CustomAlert {...alertState} />}
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: '#FDFBF5' },
+  gradient: { flex: 1 },
+  safeArea: { flex: 1, backgroundColor: 'transparent' },
   keyboardView: { flex: 1 },
   scroll: {
     flexGrow: 1,

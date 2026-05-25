@@ -311,7 +311,14 @@
     "alertCancel": "रद्द करें",
     "alertDisable": "अक्षम करें",
     "alertLogoutTitle": "लॉग आउट",
-    "alertLogoutBody": "क्या आप लॉग आउट करना चाहते हैं?"
+    "alertLogoutBody": "क्या आप लॉग आउट करना चाहते हैं?",
+    "legal": "कानूनी और सहायता",
+    "privacyPolicy": "गोपनीयता नीति",
+    "privacyPolicySubtitle": "हम आपका डेटा कैसे संभालते हैं",
+    "termsConditions": "नियम और शर्तें",
+    "termsConditionsSubtitle": "ऐप उपयोग के नियम",
+    "support": "सहायता",
+    "supportSubtitle": "हमसे संपर्क करें या खाता हटाने का अनुरोध करें"
   },
   "changePassword": {
     "title": "पासवर्ड बदलें",

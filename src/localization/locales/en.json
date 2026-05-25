@@ -311,7 +311,14 @@
     "alertCancel": "Cancel",
     "alertDisable": "Disable",
     "alertLogoutTitle": "Logout",
-    "alertLogoutBody": "Are you sure you want to logout?"
+    "alertLogoutBody": "Are you sure you want to logout?",
+    "legal": "Legal & Support",
+    "privacyPolicy": "Privacy Policy",
+    "privacyPolicySubtitle": "How we handle your data",
+    "termsConditions": "Terms & Conditions",
+    "termsConditionsSubtitle": "Rules and guidelines for app usage",
+    "support": "Help & Support",
+    "supportSubtitle": "Contact us or request account deletion"
   },
   "changePassword": {
     "title": "Change Password",

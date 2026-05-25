@@ -1,6 +1,6 @@
 import {
   View, Text, ScrollView, TouchableOpacity,
-  Switch, StyleSheet, ActivityIndicator,
+  Switch, StyleSheet, ActivityIndicator, Linking,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -8,12 +8,13 @@ import { useTranslation } from 'react-i18next';
 import { colors, spacing } from '@/theme';
 import { useBiometric, usePin } from '@/hooks';
 import { mmkvStorage, secureStorage } from '@/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuthStore, useAppStore } from '@/store';
 import { queryClient } from '@/hooks/query-client';
 import { Ionicons } from '@expo/vector-icons';
 import { biometricAuth } from '@/utils/biometric';
 import { useCustomAlert, CustomAlert } from '@/components/alert';
+import { useFocusEffect } from 'expo-router';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -65,6 +66,12 @@ export default function SettingsScreen() {
     })();
   }, [checkAvailability]);
 
+  useFocusEffect(
+    useCallback(() => {
+      void refreshPin();
+    }, [refreshPin]),
+  );
+
   const handleLanguageChange = (lang: 'en' | 'hi' | 'mr') => {
     setLanguage(lang);
   };
@@ -79,9 +86,13 @@ export default function SettingsScreen() {
       alert(t('settings.alertUnavailableTitle'), t('settings.alertUnavailableBody'));
       return;
     }
+    const next = !isBiometricEnabled;
+    if (next && !isPinEnabled) {
+      alert('PIN Required', 'Please set up a PIN before enabling biometrics. This ensures you can always access the app if biometrics fails.');
+      return;
+    }
     setBioLoading(true);
     try {
-      const next = !isBiometricEnabled;
       if (next) {
         const result = await biometricAuth.authenticate(t('settings.biometricPrompt'));
         if (!result.success) {
@@ -242,6 +253,33 @@ export default function SettingsScreen() {
             divider={false}
             onPress={() => router.push('/profile/change-password')}
             right={<Ionicons name="chevron-forward" size={18} color={colors.neutral[400]} />}
+          />
+        </View>
+
+        {/* Legal & Support */}
+        <Text style={s.sectionLabel}>{t('settings.legal')}  </Text>
+        <View style={s.card}>
+          <SettingRow
+            icon="shield-checkmark-outline" iconBg="#0EA5E9"
+            title={t('settings.privacyPolicy')}
+            subtitle={t('settings.privacyPolicySubtitle')}
+            onPress={() => void Linking.openURL('https://slunawat.com/home/privacypolicy')}
+            right={<Ionicons name="open-outline" size={16} color={colors.neutral[400]} />}
+          />
+          <SettingRow
+            icon="document-text-outline" iconBg="#6366F1"
+            title={t('settings.termsConditions')}
+            subtitle={t('settings.termsConditionsSubtitle')}
+            onPress={() => void Linking.openURL('https://slunawat.com/home/terms')}
+            right={<Ionicons name="open-outline" size={16} color={colors.neutral[400]} />}
+          />
+          <SettingRow
+            icon="headset-outline" iconBg="#10B981"
+            title={t('settings.support')}
+            subtitle={t('settings.supportSubtitle')}
+            divider={false}
+            onPress={() => void Linking.openURL('https://slunawat.com/home/contact')}
+            right={<Ionicons name="open-outline" size={16} color={colors.neutral[400]} />}
           />
         </View>
 

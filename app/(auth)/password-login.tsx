@@ -24,6 +24,9 @@ import { useAppStore } from '@/store';
 import { Ionicons } from '@expo/vector-icons';
 import { useCustomAlert, CustomAlert } from '@/components/alert';
 import { useAuthStore } from '@/store';
+import { LinearGradient } from 'expo-linear-gradient';
+import { haptics } from '@/utils/haptics';
+import { PressableScale } from '@/components/pressable-scale';
 
 export default function PasswordLoginScreen() {
   const { t } = useTranslation();
@@ -64,7 +67,7 @@ export default function PasswordLoginScreen() {
         password: data.password,
       });
       setAuth(result.accessToken, result.userId);
-      router.replace('/(tabs)/dashboard');
+      router.replace('/(auth)/setup-security');
     } catch (error) {
       const field = inputMode === 'mobile' ? 'mobileNo' : 'email';
       const errorMessage = (error as Error).message;
@@ -89,6 +92,12 @@ export default function PasswordLoginScreen() {
   };
 
   return (
+    <LinearGradient
+      colors={['#FFF9F0', '#FDFBF5', '#FFF8E7']}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -245,18 +254,18 @@ export default function PasswordLoginScreen() {
             />
 
             {/* Login Button */}
-            <TouchableOpacity
+            <PressableScale
+              scale={0.97}
               style={[styles.primaryButton, isSubmitting && styles.primaryButtonDisabled]}
-              onPress={handleSubmit(onSubmit)}
+              onPress={() => { haptics.medium(); handleSubmit(onSubmit)(); }}
               disabled={isSubmitting}
-              activeOpacity={0.82}
             >
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
                 <Text style={styles.primaryButtonText}>{t('passwordLogin.login') + ' '}</Text>
               )}
-            </TouchableOpacity>
+            </PressableScale>
 
             {/* Forgot Password */}
             <TouchableOpacity
@@ -308,13 +317,15 @@ export default function PasswordLoginScreen() {
 
       {alertState && <CustomAlert {...alertState} />}
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: { flex: 1 },
   safeArea: {
     flex: 1,
-    backgroundColor: '#FDFBF5',
+    backgroundColor: 'transparent',
   },
   keyboardView: {
     flex: 1,

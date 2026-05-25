@@ -177,29 +177,29 @@ export default function LoanDetailsScreen() {
             </Text>
           </View>
           <View style={styles.divider} />
-          <Row label="Gold Rate" value={`₹${loan.GoldRate ?? '—'}/g` + ' '} />
+          <Row label="Gold Rate" value={`  ₹${loan.GoldRate ?? '—'}/g` + ' '} />
           <View style={styles.rowDivider} />
-          <Row label="Gold Value " value={`₹ ${goldAmt.toLocaleString('en-IN') + ' '}`} />
+          <Row label="Gold Value " value={`  ₹ ${goldAmt.toLocaleString('en-IN') + ' '}`} />
           <View style={styles.rowDivider} />
-          <Row label="Eligible Amount" value={`₹${eligible.toLocaleString('en-IN') + ' '}`} />
+          <Row label="Eligible Amount" value={`  ₹${eligible.toLocaleString('en-IN') + ' '}`} />
           <View style={styles.rowDivider} />
-          <Row label="Scheme" value={loan.Scheme ?? '—'} />
+          <Row label="Scheme" value={' ' + (loan.Scheme ?? '—')} />
         </View>
 
         {/* Loan Info */}
         <Text style={styles.sectionTitle}>Loan Information  </Text>
         <View style={styles.card}>
-          <Row label="Branch" value={loan.BranchName ?? '—'} />
+          <Row label="Branch" value={' ' + (loan.BranchName ?? '—')} />
           <View style={styles.rowDivider} />
-          <Row label="Loan Date" value={loan.LoanDate ?? '—'} />
+          <Row label="Loan Date" value={' ' + (loan.LoanDate ?? '—')} />
           <View style={styles.rowDivider} />
-          <Row label="Pay Frequency" value={loan.PayFrequency ? `${loan.PayFrequency} days` : '—'} />
+          <Row label="Pay Frequency" value={' ' + (loan.PayFrequency ? `${loan.PayFrequency} days` : '—')} />
           <View style={styles.rowDivider} />
           <Row label="Min Interest Days" value={String(loan.MinIntdays ?? '—')} />
           {loan.Wallet && loan.Wallet !== '0' ? (
             <>
               <View style={styles.rowDivider} />
-              <Row label="Wallet Balance" value={`₹${loan.Wallet}`} />
+              <Row label="Wallet Balance" value={' ' + `₹${loan.Wallet}`} />
             </>
           ) : null}
         </View>

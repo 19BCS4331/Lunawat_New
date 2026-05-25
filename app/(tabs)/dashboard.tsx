@@ -4,7 +4,6 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
   RefreshControl,
   Image,
 } from 'react-native';
@@ -16,6 +15,9 @@ import { colors, spacing } from '@/theme';
 import { useMyLoans, useProfile } from '@/hooks';
 import type { Loan } from '@/types';
 import { useState } from 'react';
+import { SkeletonDashboard } from '@/components/skeleton';
+import { PressableScale } from '@/components/pressable-scale';
+import { haptics } from '@/utils/haptics';
 
 function parsePendingAmount(val: string | number | undefined): number {
   if (val === undefined || val === null || val === '-') return 0;
@@ -40,7 +42,11 @@ function LoanCard({ loan, onPress }: LoanCardProps) {
   const interest = parsePendingAmount(loan.IntAmount);
 
   return (
-    <TouchableOpacity style={styles.loanCard} onPress={onPress} activeOpacity={0.82}>
+    <PressableScale
+      style={styles.loanCard}
+      onPress={() => { haptics.light(); onPress(); }}
+      scale={0.98}
+    >
       <View style={styles.loanCardHeader}>
         <View>
           <Text style={styles.loanNo}>{loan.LoanNo}        </Text>
@@ -93,7 +99,7 @@ function LoanCard({ loan, onPress }: LoanCardProps) {
           <Text style={styles.loanDateText}>{loan.LoanDate}</Text>
         </View>
       ) : null}
-    </TouchableOpacity>
+    </PressableScale>
   );
 }
 
@@ -116,10 +122,10 @@ export default function DashboardScreen() {
   const closedCount = loans?.filter((l: Loan) => l.LoanStatus === 'Closed')?.length ?? 0;
 
   const quickActions = [
-    { id: 'pay', icon: 'card' as const, label: t('dashboard.payNow'), onPress: () => router.push('/payments/make-payment') },
-    { id: 'loans', icon: 'document-text' as const, label: t('dashboard.myLoans'), onPress: () => router.push('/loans') },
-    { id: 'history', icon: 'receipt' as const, label: t('dashboard.history'), onPress: () => router.push('/payments/history') },
-    { id: 'profile', icon: 'person-circle' as const, label: t('dashboard.profile'), onPress: () => router.push('/(tabs)/profile') },
+    { id: 'pay', icon: 'card' as const, label: t('dashboard.payNow'), onPress: () => { haptics.light(); router.push('/payments/make-payment'); } },
+    { id: 'loans', icon: 'document-text' as const, label: t('dashboard.myLoans'), onPress: () => { haptics.light(); router.push('/loans'); } },
+    { id: 'history', icon: 'receipt' as const, label: t('dashboard.history'), onPress: () => { haptics.light(); router.push('/payments/history'); } },
+    { id: 'profile', icon: 'person-circle' as const, label: t('dashboard.profile'), onPress: () => { haptics.light(); router.push('/(tabs)/profile'); } },
   ];
 
   const onRefresh = async () => {
@@ -131,10 +137,7 @@ export default function DashboardScreen() {
   if (isLoading) {
     return (
       <SafeAreaView style={styles.safeArea}>
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color={colors.primary.gold} />
-          <Text style={styles.loadingText}>{t('dashboard.loadingPortfolio') + ' '}</Text>
-        </View>
+        <SkeletonDashboard />
       </SafeAreaView>
     );
   }
@@ -217,17 +220,17 @@ export default function DashboardScreen() {
         <Text style={styles.sectionTitle}>{t('dashboard.quickActions')}  </Text>
         <View style={styles.actionsGrid}>
           {quickActions.map((a) => (
-            <TouchableOpacity
+            <PressableScale
               key={a.id}
               style={styles.actionCard}
               onPress={a.onPress}
-              activeOpacity={0.8}
+              scale={0.94}
             >
               <View style={styles.actionIconWrap}>
                 <Ionicons name={a.icon} size={22} color={colors.primary.dark} />
               </View>
               <Text style={styles.actionLabel}>{a.label} </Text>
-            </TouchableOpacity>
+            </PressableScale>
           ))}
         </View>
 
@@ -239,12 +242,12 @@ export default function DashboardScreen() {
           </TouchableOpacity>
         </View>
 
-        {loans && loans.length > 0 ? (
-          loans.slice(0, 4).map((loan: Loan) => (
+        {openLoans.length > 0 ? (
+          openLoans.slice(0, 4).map((loan: Loan) => (
             <LoanCard
               key={loan.ID}
               loan={loan}
-              onPress={() => router.push(`/loans/${loan.ID}`)}
+              onPress={() => { haptics.light(); router.push(`/loans/${loan.ID}`); }}
             />
           ))
         ) : (
@@ -334,6 +337,7 @@ const styles = StyleSheet.create({
     flex: 1, alignItems: 'center', marginHorizontal: 4,
     backgroundColor: colors.white, borderRadius: 16,
     paddingVertical: spacing[4],
+    paddingHorizontal: spacing[4],
     borderWidth: 1, borderColor: '#EDE8D8',
     shadowColor: colors.primary.gold,
     shadowOffset: { width: 0, height: 2 },

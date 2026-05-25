@@ -17,48 +17,74 @@ import { useCustomAlert, CustomAlert } from '@/components/alert';
 
 const PIN_LENGTH = 4;
 
-const KEYS = [
+// Rows when biometric is also available
+const KEYS_WITH_BIO = [
   ['1', '2', '3'],
   ['4', '5', '6'],
   ['7', '8', '9'],
   ['bio', '0', '⌫'],
 ];
 
+// Rows when only PIN (no bio key shown, empty placeholder instead)
+const KEYS_PIN_ONLY = [
+  ['1', '2', '3'],
+  ['4', '5', '6'],
+  ['7', '8', '9'],
+  ['', '0', '⌫'],
+];
+
+type AuthMode =
+  | 'loading'      // Determining what's available — show spinner
+  | 'bio-only'     // Only biometrics enabled — no keypad, just bio button
+  | 'pin-only'     // Only PIN enabled — no bio button
+  | 'pin-and-bio'; // Both enabled — show keypad + bio button
+
 export default function VerifyPinScreen() {
   const router = useRouter();
   const { alert, alertState } = useCustomAlert();
 
+  const [mode, setMode] = useState<AuthMode>('loading');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [verifying, setVerifying] = useState(false);
   const [remainingAttempts, setRemainingAttempts] = useState(5);
-  const [biometricAvailable, setBiometricAvailable] = useState(false);
+  const [bioError, setBioError] = useState('');
+
+  const triggerBiometric = useCallback(async () => {
+    setBioError('');
+    const result = await biometricAuth.authenticate('Verify your identity to continue');
+    if (result.success) {
+      router.replace('/(tabs)/dashboard');
+    } else if (result.error && result.error !== 'UserCancel' && result.error !== 'user_cancel') {
+      setBioError('Biometric failed. Try again or use your PIN.');
+    }
+  }, [router]);
 
   useEffect(() => {
     void (async () => {
-      const [attempts, available, bioEnabled] = await Promise.all([
+      const [attempts, available, bioEnabled, pinEnabled] = await Promise.all([
         pinManager.getRemainingAttempts(),
         biometricAuth.isAvailable(),
         biometricAuth.isBiometricEnabled(),
+        pinManager.isPinEnabled(),
       ]);
+
       setRemainingAttempts(attempts);
-      setBiometricAvailable(available && bioEnabled);
-      // Auto-prompt biometric on open if available
-      if (available && bioEnabled) {
-        triggerBiometric();
+
+      const bioReady = available && bioEnabled;
+
+      if (pinEnabled) {
+        setMode(bioReady ? 'pin-and-bio' : 'pin-only');
+      } else if (bioReady) {
+        setMode('bio-only');
+      } else {
+        router.replace('/(tabs)/dashboard');
       }
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const triggerBiometric = useCallback(async () => {
-    const result = await biometricAuth.authenticate('Verify your identity to continue');
-    if (result.success) {
-      router.replace('/(tabs)/dashboard');
-    }
-  }, [router]);
-
   const handleComplete = useCallback(async (enteredPin: string) => {
-    setLoading(true);
+    setVerifying(true);
     try {
       const success = await pinManager.verifyPin(enteredPin);
       if (success) {
@@ -82,12 +108,12 @@ export default function VerifyPinScreen() {
       setError('An error occurred. Please try again.');
       setPin('');
     } finally {
-      setLoading(false);
+      setVerifying(false);
     }
-  }, [router]);
+  }, [router, alert]);
 
   const handleKey = useCallback((key: string) => {
-    if (key === 'bio') { triggerBiometric(); return; }
+    if (key === 'bio') { void triggerBiometric(); return; }
     if (key === '') return;
     setError('');
 
@@ -106,10 +132,63 @@ export default function VerifyPinScreen() {
     });
   }, [triggerBiometric, handleComplete]);
 
+  // ── Loading state — fully opaque, no UI flash ──
+  if (mode === 'loading') {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={colors.primary.gold} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  // ── Bio-only mode — fingerprint prompt, no keypad ──
+  if (mode === 'bio-only') {
+    return (
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.body}>
+          <View style={styles.iconWrap}>
+            <Ionicons name="finger-print" size={40} color={colors.white} />
+          </View>
+          <Text style={styles.title}>Verify Identity   </Text>
+          <Text style={styles.subtitle}>Tap the button below to authenticate</Text>
+
+          {!!bioError && (
+            <View style={styles.errorBox}>
+              <Ionicons name="alert-circle" size={14} color="#B71C1C" />
+              <Text style={styles.errorText}>{bioError}</Text>
+            </View>
+          )}
+
+          <TouchableOpacity
+            style={styles.bioBtn}
+            onPress={() => void triggerBiometric()}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="finger-print" size={28} color={colors.white} />
+            <Text style={styles.bioBtnText}>Use Biometrics  </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.logoutBtn}
+            onPress={() => router.replace('/(auth)/login')}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.logoutText}>Use a different account</Text>
+          </TouchableOpacity>
+        </View>
+        {alertState && <CustomAlert {...alertState} />}
+      </SafeAreaView>
+    );
+  }
+
+  // ── PIN mode (pin-only or pin-and-bio) ──
+  const keys = mode === 'pin-and-bio' ? KEYS_WITH_BIO : KEYS_PIN_ONLY;
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.body}>
-        {/* Icon */}
         <View style={styles.iconWrap}>
           <Ionicons name="shield-checkmark" size={36} color={colors.white} />
         </View>
@@ -134,32 +213,37 @@ export default function VerifyPinScreen() {
         {!error && remainingAttempts < 5 && (
           <Text style={styles.attemptsText}>{remainingAttempts} attempt{remainingAttempts === 1 ? '' : 's'} remaining</Text>
         )}
+        {!!bioError && (
+          <View style={styles.errorBox}>
+            <Ionicons name="alert-circle" size={14} color="#B71C1C" />
+            <Text style={styles.errorText}>{bioError}</Text>
+          </View>
+        )}
 
         {/* Keypad */}
-        {loading ? (
+        {verifying ? (
           <ActivityIndicator size="large" color={colors.primary.gold} style={{ marginTop: spacing[8] }} />
         ) : (
           <View style={styles.keypad}>
-            {KEYS.map((row, ri) => (
+            {keys.map((row, ri) => (
               <View key={ri} style={styles.keyRow}>
                 {row.map((key, ki) => {
                   const isBio = key === 'bio';
                   const isEmpty = key === '';
-                  const showBio = isBio && biometricAvailable;
                   return (
                     <TouchableOpacity
                       key={ki}
-                      style={[styles.key, (isEmpty || (isBio && !biometricAvailable)) && styles.keyEmpty]}
+                      style={[styles.key, isEmpty && styles.keyEmpty]}
                       onPress={() => handleKey(key)}
-                      activeOpacity={(isEmpty || (isBio && !biometricAvailable)) ? 1 : 0.65}
-                      disabled={isEmpty || (isBio && !biometricAvailable)}
+                      activeOpacity={isEmpty ? 1 : 0.65}
+                      disabled={isEmpty}
                     >
                       {key === '⌫' ? (
                         <Ionicons name="backspace-outline" size={22} color={colors.neutral[700]} />
-                      ) : showBio ? (
+                      ) : isBio ? (
                         <Ionicons name="finger-print" size={26} color={colors.primary.gold} />
-                      ) : !isBio && !isEmpty ? (
-                        <Text style={styles.keyText}>{key}  </Text>
+                      ) : !isEmpty ? (
+                        <Text style={styles.keyText}>{key}</Text>
                       ) : null}
                     </TouchableOpacity>
                   );
@@ -169,7 +253,6 @@ export default function VerifyPinScreen() {
           </View>
         )}
 
-        {/* Logout link */}
         <TouchableOpacity
           style={styles.logoutBtn}
           onPress={() => router.replace('/(auth)/login')}
@@ -186,6 +269,7 @@ export default function VerifyPinScreen() {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: '#FDFBF5' },
+  centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   body: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: spacing[6] },
 
   iconWrap: {
@@ -222,6 +306,16 @@ const styles = StyleSheet.create({
   },
   keyEmpty: { backgroundColor: 'transparent', borderColor: 'transparent', elevation: 0, shadowOpacity: 0 },
   keyText: { fontSize: 22, fontWeight: '700', color: colors.neutral[900] },
+
+  bioBtn: {
+    flexDirection: 'row', alignItems: 'center', gap: spacing[2],
+    backgroundColor: colors.primary.gold,
+    paddingHorizontal: spacing[8], paddingVertical: spacing[4],
+    borderRadius: 16, marginTop: spacing[6],
+    shadowColor: colors.primary.gold,
+    shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 12, elevation: 8,
+  },
+  bioBtnText: { fontSize: 16, fontWeight: '700', color: colors.white },
 
   logoutBtn: { marginTop: spacing[8] },
   logoutText: { fontSize: 13, color: colors.neutral[400], textDecorationLine: 'underline' },

@@ -22,6 +22,9 @@ import { useSendLoginOtp } from '@/hooks';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '@/store';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
+import { haptics } from '@/utils/haptics';
+import { PressableScale } from '@/components/pressable-scale';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
@@ -81,6 +84,12 @@ export default function LoginScreen() {
   };
 
   return (
+    <LinearGradient
+      colors={['#FFF9F0', '#FDFBF5', '#FFF8E7']}
+      style={styles.gradient}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
     <SafeAreaView style={styles.safeArea}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -204,18 +213,18 @@ export default function LoginScreen() {
             )}
 
             {/* OTP Button */}
-            <TouchableOpacity
+            <PressableScale
+              scale={0.97}
               style={[styles.primaryButton, isSubmitting && styles.primaryButtonDisabled]}
-              onPress={handleSubmit(onSubmit)}
+              onPress={() => { haptics.medium(); handleSubmit(onSubmit)(); }}
               disabled={isSubmitting}
-              activeOpacity={0.82}
             >
               {isSubmitting ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
                 <Text style={styles.primaryButtonText}>{t('loginScreen.sendOtp')+' '}</Text>
               )}
-            </TouchableOpacity>
+            </PressableScale>
 
             {/* Divider */}
             <View style={styles.dividerRow}>
@@ -273,13 +282,17 @@ export default function LoginScreen() {
         </TouchableOpacity>
       </Modal>
     </SafeAreaView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: '#FDFBF5',
+    backgroundColor: 'transparent',
   },
   keyboardView: {
     flex: 1,

@@ -1,4 +1,5 @@
 export * from './storage.utils';
+export { sessionGuard } from './session-guard';
 export * from './format.utils';
 export * from './validation.utils';
 export { biometricAuth, type BiometricType, type BiometricAuthResult } from './biometric';

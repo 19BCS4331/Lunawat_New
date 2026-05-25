@@ -1,8 +1,9 @@
 import { Tabs } from 'expo-router';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '@/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useRef, useEffect } from 'react';
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -14,14 +15,28 @@ interface TabIconProps {
 }
 
 function TabIcon({ focused, icon, iconFocused, label }: TabIconProps) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: focused ? 1.1 : 1,
+      useNativeDriver: true,
+      friction: 5,
+      tension: 300,
+    }).start();
+  }, [focused, scaleAnim]);
+
   return (
     <View style={[styles.tabItem, focused && styles.tabItemActive]}>
-      <Ionicons
-        name={focused ? iconFocused : icon}
-        size={22}
-        color={focused ? colors.primary.gold : colors.neutral[400]}
-      />
+      <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+        <Ionicons
+          name={focused ? iconFocused : icon}
+          size={22}
+          color={focused ? colors.primary.gold : colors.neutral[400]}
+        />
+      </Animated.View>
       <Text style={[styles.tabLabel, focused && styles.tabLabelActive]}>{label}</Text>
+      {focused && <View style={styles.activeDot} />}
     </View>
   );
 }
@@ -111,5 +126,12 @@ const styles = StyleSheet.create({
   },
   tabLabelActive: {
     color: colors.primary.dark,
+  },
+  activeDot: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.primary.gold,
+    marginTop: 2,
   },
 });

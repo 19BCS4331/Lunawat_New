@@ -14,6 +14,7 @@ import { colors, spacing } from '@/theme';
 import { pinManager } from '@/utils/pin';
 import { useAuthStore } from '@/store';
 import { useCustomAlert, CustomAlert } from '@/components/alert';
+import { haptics } from '@/utils/haptics';
 
 const PIN_LENGTH = 4;
 
@@ -42,15 +43,18 @@ export default function SetupPinScreen() {
     setError('');
 
     if (key === '⌫') {
+      haptics.light();
       setPin((p) => p.slice(0, -1));
       return;
     }
 
+    haptics.light();
     setPin((p) => {
       if (p.length >= PIN_LENGTH) return p;
       const next = p + key;
 
       if (next.length === PIN_LENGTH) {
+        haptics.medium();
         // Auto-advance after slight delay so last dot fills in visually
         setTimeout(() => handleComplete(next), 120);
       }
