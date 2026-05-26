@@ -1,4 +1,4 @@
-package com.lunawat.finance
+package com.slunawat
 
 import android.app.Application
 import android.content.res.Configuration

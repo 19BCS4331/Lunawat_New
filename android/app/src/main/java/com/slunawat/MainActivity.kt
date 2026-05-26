@@ -1,4 +1,4 @@
-package com.lunawat.finance
+package com.slunawat
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
