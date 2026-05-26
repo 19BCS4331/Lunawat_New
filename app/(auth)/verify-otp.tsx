@@ -75,7 +75,7 @@ export default function VerifyOtpScreen() {
             activeOpacity={0.7}
           >
             <Ionicons name="language-outline" size={18} color={colors.primary.dark} />
-            <Text style={styles.langBtnText}>{language.toUpperCase() + ' '}</Text>
+            <Text style={styles.langBtnText}>{language.toUpperCase() + '  '}</Text>
           </TouchableOpacity>
 
           {/* Back Button */}
