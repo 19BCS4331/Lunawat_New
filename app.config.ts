@@ -7,7 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '1.0.0',
   orientation: 'portrait',
   scheme: 'lunawat',
-  icon: './assets/SLF_New_Logo_PNG.png',
+  icon: './assets/icon.png',
   userInterfaceStyle: 'light',
   assetBundlePatterns: ['**/*'],
   ios: {
@@ -19,12 +19,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       NSMicrophoneUsagePermission: 'Allow $(PRODUCT_NAME) to access your microphone',
     },
   },
+  splash: {
+    image: './assets/splash.png',
+    resizeMode: 'contain',
+    backgroundColor: '#000000',
+    imageWidth: 642,
+  },
   android: {
     package: 'com.slunawat',
     versionCode: 1,
     adaptiveIcon: {
-      foregroundImage: './assets/SLF_New_Logo_PNG.png',
-      backgroundColor: '#FDFBF5',
+      foregroundImage: './assets/adaptive-icon.png',
+      backgroundColor: '#000000',
     },
     permissions: [
       'INTERNET',
@@ -43,20 +49,20 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-router',
     'expo-local-authentication',
-    [
-      'expo-splash-screen',
-      {
-        image: './assets/SLF_New_Logo_PNG.png',
-        imageWidth: 200,
-        backgroundColor: '#FDFBF5',
-      },
-    ],
+    // [
+    //   'expo-splash-screen',
+    //   {
+    //     image: './assets/splash.png',
+    //     imageWidth: 200,
+    //     backgroundColor: '#000000',
+    //   },
+    // ],
   ],
   extra: {
     eas: {
       projectId: '7eda4f92-2d1e-4266-9fef-9822b2abb9c2',
     },
-    API_BASE_URL: process.env.API_BASE_URL || 'https://lunawat-new-853454096741.asia-south1.run.app',
+    API_BASE_URL: process.env.API_BASE_URL || 'https://lunawat-new-483120173124.asia-south1.run.app',
     ENV: process.env.ENV || 'development',
   },
   runtimeVersion: '1.0.0',
