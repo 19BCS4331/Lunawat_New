@@ -12,7 +12,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.lunawat.finance',
+    bundleIdentifier: 'com.slunawat',
     buildNumber: '1',
     infoPlist: {
       NSCameraUsagePermission: 'Allow $(PRODUCT_NAME) to access your camera',
@@ -20,7 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     },
   },
   android: {
-    package: 'com.lunawat.finance',
+    package: 'com.slunawat',
     versionCode: 1,
     adaptiveIcon: {
       foregroundImage: './assets/SLF_New_Logo_PNG.png',
