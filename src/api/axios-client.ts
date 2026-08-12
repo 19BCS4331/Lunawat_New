@@ -53,7 +53,7 @@ class ApiClient {
 
     // Response interceptor
     this.client.interceptors.response.use(
-      (response) => {
+      async (response) => {
         if (__DEV__) {
           console.log('✅ API Response:', {
             url: response.config.url,
@@ -61,6 +61,19 @@ class ApiClient {
             data: response.data,
           });
         }
+
+        // Check for "Invalid Token" in response data (backend returns 200 with error payload)
+        const data = response.data;
+        if (Array.isArray(data) && data[0]?.Status === 'Invalid Token') {
+          // Clear auth and redirect to login — no refresh endpoint available
+          await this.handleAuthError();
+          return Promise.reject(new Error('Invalid token'));
+        }
+        if (typeof data === 'string' && data === 'Invalid Token') {
+          await this.handleAuthError();
+          return Promise.reject(new Error('Invalid token'));
+        }
+
         return response;
       },
       async (error: AxiosError) => {
