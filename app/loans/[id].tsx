@@ -37,7 +37,8 @@ export default function LoanDetailsScreen() {
   const { data: allLoans, isLoading: allLoansLoading, error } = useMyLoans();
   const { data: offlinePayments } = useOfflinePaymentHistory();
   const isLoading = outstandingLoading || allLoansLoading;
-  // Outstanding has full payment fields — prefer it; fall back to allLoans for closed loans
+  // Outstanding has full payment fields — prefer it; fall back to MyLoans for display fields.
+  // Both sources only contain open loans, so a closed loan ID resolves to "Loan Not Found".
   const loan = outstandingLoans?.find((l: Loan) => l.ID === id) ?? allLoans?.find((l: Loan) => l.ID === id);
 
   if (isLoading) {

@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing } from '@/theme';
-import { useOutstandingLoans, useGeneratePaymentToken } from '@/hooks';
+import { useOutstandingLoans, useGeneratePaymentToken, useRefreshLoanData } from '@/hooks';
 import { useCustomAlert, CustomAlert } from '@/components/alert';
 import {
   paymentCalculator,
@@ -40,9 +40,13 @@ export default function MakePaymentScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { loanId } = useLocalSearchParams<{ loanId?: string }>();
-  const { data: loans, isLoading: loansLoading } = useOutstandingLoans();
+  const { data: loans, isLoading: loansLoading, refetch: refetchLoans } = useOutstandingLoans();
   const generatePaymentToken = useGeneratePaymentToken();
+  const refreshLoanData = useRefreshLoanData();
   const { alert, alertState } = useCustomAlert();
+  const [checkingBalance, setCheckingBalance] = useState(false);
+  const submittingRef = useRef(false);
+  const wasInPaymentRef = useRef(false);
 
   const [selectedLoan, setSelectedLoan] = useState<Loan | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('');
@@ -72,6 +76,25 @@ export default function MakePaymentScreen() {
     // Clear previous strict calculation when amount changes
     setCalculation(null);
   }, [selectedLoan, paymentAmount]);
+
+  // After any payment attempt (gateway closed or screen left mid-payment), mark
+  // balances stale so the next payment is validated against the real balance.
+  useEffect(() => {
+    if (showWebView) {
+      wasInPaymentRef.current = true;
+      return;
+    }
+    if (wasInPaymentRef.current) {
+      wasInPaymentRef.current = false;
+      refreshLoanData();
+    }
+  }, [showWebView, refreshLoanData]);
+
+  useEffect(() => {
+    return () => {
+      if (wasInPaymentRef.current) refreshLoanData();
+    };
+  }, [refreshLoanData]);
 
   // Resume pending transaction on app foreground
   useEffect(() => {
@@ -112,11 +135,34 @@ export default function MakePaymentScreen() {
   };
 
   const handleProceedToPayment = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    try {
+      await proceedToPayment();
+    } finally {
+      submittingRef.current = false;
+      setCheckingBalance(false);
+    }
+  };
+
+  const proceedToPayment = async () => {
     if (!selectedLoan || !liveInstruction?.isPayable || !paymentAmount) return;
     const amount = parseFloat(paymentAmount);
     if (isNaN(amount) || amount <= 0) return;
+
+    // Always validate against the latest balance from the server — cached loan
+    // data can predate a payment made moments ago (₹90 minimum-balance rule).
+    setCheckingBalance(true);
+    const latest = await refetchLoans();
+    const freshLoan = latest.data?.find((l: Loan) => l.ID === selectedLoan.ID);
+    if (latest.isError || !freshLoan) {
+      alert(t('makePayment.alertBalanceCheckTitle'), t('makePayment.alertBalanceCheckBody'));
+      return;
+    }
+    if (freshLoan !== selectedLoan) setSelectedLoan(freshLoan);
+
     // Run strict band validation (SendToPG equivalent)
-    const strictCalc = paymentCalculator.calculate({ loan: selectedLoan, paymentAmount: amount });
+    const strictCalc = paymentCalculator.calculate({ loan: freshLoan, paymentAmount: amount });
     setCalculation(strictCalc);
     if (!strictCalc.canPay) {
       alert(t('makePayment.alertErrorTitle'), strictCalc.error ?? t('makePayment.alertErrorBody'));
@@ -134,8 +180,8 @@ export default function MakePaymentScreen() {
 
     try {
       const tokenResponse = await generatePaymentToken.mutateAsync({
-        loanId: selectedLoan.ID,
-        loanNo: selectedLoan.LoanNo,
+        loanId: freshLoan.ID,
+        loanNo: freshLoan.LoanNo,
         amount: strictCalc.roundedTotal.toString(),
       });
 
@@ -144,8 +190,8 @@ export default function MakePaymentScreen() {
         bdorderid: tokenResponse.bdorderid,
         token: tokenResponse.token,
         amount: strictCalc.roundedTotal.toString(),
-        loanId: selectedLoan.ID,
-        loanNo: selectedLoan.LoanNo,
+        loanId: freshLoan.ID,
+        loanNo: freshLoan.LoanNo,
       };
 
       billDeskHandler.current = new BillDeskPaymentHandler((state) => {
@@ -284,6 +330,10 @@ export default function MakePaymentScreen() {
   const pending    = parseSafe(selectedLoan?.PendingLoanAmount);
   const intDueDays = parseSafe(selectedLoan?.IntDuedays);
   const suggests   = selectedLoan ? paymentCalculator.suggestAmounts(selectedLoan) : null;
+  const limit      = selectedLoan ? paymentCalculator.getPaymentLimit(selectedLoan) : null;
+  // ₹90 must always remain — when no online payment can respect that, send the customer to a branch.
+  const branchOnly = limit !== null && !limit.payableOnline;
+  const payBusy    = checkingBalance || generatePaymentToken.isPending;
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -368,15 +418,30 @@ export default function MakePaymentScreen() {
                   <Text style={styles.summaryStatLabel}>{t('makePayment.totalDue')}</Text>
                 </View>
               </View>
-              <Text style={styles.summaryHint}>
-                {t('makePayment.hint', { max: ((totalDue > 0 ? totalDue : pending) - 90).toLocaleString('en-IN') })}
-              </Text>
+              {limit && !branchOnly && (
+                <Text style={styles.summaryHint}>
+                  {t('makePayment.hint', { max: limit.maxPayable.toLocaleString('en-IN') })}
+                </Text>
+              )}
             </View>
           </>
         )}
 
+        {/* Branch-only notice — online payment would breach the ₹90 minimum balance */}
+        {selectedLoan && branchOnly && (
+          <View
+            style={[styles.instructionBox, styles.instructionWarn, { marginTop: spacing[5] }]}
+            accessibilityRole="alert"
+          >
+            <Ionicons name="business-outline" size={16} color="#E65100" />
+            <Text style={[styles.instructionText, styles.instructionTextWarn]}>
+              {t('makePayment.branchOnly')}
+            </Text>
+          </View>
+        )}
+
         {/* Amount input */}
-        {selectedLoan && (
+        {selectedLoan && !branchOnly && (
           <>
             <Text style={styles.sectionTitle}>{t('makePayment.paymentAmount')}  </Text>
             <View style={styles.amountCard}>
@@ -486,14 +551,16 @@ export default function MakePaymentScreen() {
         )}
 
         {/* CTA — enabled when live instruction says payable */}
-        {selectedLoan && (
+        {selectedLoan && !branchOnly && (
           <TouchableOpacity
-            style={[styles.payBtn, (!liveInstruction?.isPayable || generatePaymentToken.isPending) && styles.payBtnDisabled]}
-            disabled={!liveInstruction?.isPayable || generatePaymentToken.isPending}
+            style={[styles.payBtn, (!liveInstruction?.isPayable || payBusy) && styles.payBtnDisabled]}
+            disabled={!liveInstruction?.isPayable || payBusy}
             onPress={handleProceedToPayment}
             activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !liveInstruction?.isPayable || payBusy, busy: payBusy }}
           >
-            {generatePaymentToken.isPending ? (
+            {payBusy ? (
               <ActivityIndicator color={colors.white} />
             ) : (
               <>

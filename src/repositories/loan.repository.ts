@@ -1,5 +1,6 @@
 import { loanService } from '@/services';
 import { secureStorage } from '@/utils';
+import { LOAN_STATUS } from '@/constants';
 import type { UserProfile, Loan } from '@/types';
 
 export const loanRepository = {
@@ -15,6 +16,11 @@ export const loanRepository = {
     return response;
   },
 
+  /**
+   * Returns only the customer's outstanding (open) loans.
+   * Closed loans are intentionally never surfaced in the app (client requirement),
+   * so they are dropped here and no screen has to filter them out.
+   */
   async getMyLoans(): Promise<Loan[]> {
     const userId = await secureStorage.getItem('user_id');
     const token = await secureStorage.getItem('access_token');
@@ -30,8 +36,8 @@ export const loanRepository = {
     if (firstLoan && 'Status' in firstLoan && firstLoan.Status === 'Invalid Token') {
       throw new Error('Invalid token');
     }
-    
-    return response;
+
+    return loanRepository.getOpenLoans(response);
   },
 
   async getOutstandingLoans(): Promise<Loan[]> {
@@ -49,15 +55,11 @@ export const loanRepository = {
     if (firstOutstanding && 'Status' in firstOutstanding && firstOutstanding.Status === 'Invalid Token') {
       throw new Error('Invalid token');
     }
-    
-    return response;
+
+    return loanRepository.getOpenLoans(response);
   },
 
   getOpenLoans(loans: Loan[]): Loan[] {
-    return loans.filter((loan) => loan.LoanStatus === 'Open');
-  },
-
-  getClosedLoans(loans: Loan[]): Loan[] {
-    return loans.filter((loan) => loan.LoanStatus === 'Closed');
+    return loans.filter((loan) => loan.LoanStatus === LOAN_STATUS.OPEN);
   },
 };

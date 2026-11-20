@@ -27,7 +27,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     package: 'com.slunawat',
-    versionCode: 1,
+    versionCode: 3,
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#000000',
@@ -37,9 +37,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       'ACCESS_NETWORK_STATE',
       'CAMERA',
       'RECORD_AUDIO',
-      'READ_EXTERNAL_STORAGE',
-      'WRITE_EXTERNAL_STORAGE',
       'VIBRATE',
+    ],
+    blockedPermissions: [
+      'android.permission.READ_EXTERNAL_STORAGE',
+      'android.permission.WRITE_EXTERNAL_STORAGE',
     ],
   },
   web: {

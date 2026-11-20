@@ -19,11 +19,65 @@ export interface PaymentCalculationResult {
   roundedTotal: number;
 }
 
+export interface PaymentLimit {
+  /** Largest amount (excluding notice/other charges) that may be paid online. */
+  maxPayable: number;
+  /** False when no online payment is possible without dropping below the ₹90 floor. */
+  payableOnline: boolean;
+}
+
 const ROUND_TO = 10;
 const MIN_TRANSACTION = 100;
+/**
+ * Business rule: at least ₹90 must always remain outstanding so a customer
+ * cannot close a loan online — loans are closed only at a branch.
+ */
+const MIN_REMAINING_BALANCE = 90;
+
+export const BRANCH_ONLY_MESSAGE =
+  'This loan cannot be paid online because at least ₹90 must remain on it. Please visit your branch to pay or close this loan.';
 
 function ceilToNearest(value: number, multiple: number): number {
   return Math.ceil(value / multiple) * multiple;
+}
+
+function floorToNearest(value: number, multiple: number): number {
+  return Math.floor(value / multiple) * multiple;
+}
+
+/** Single source of truth for the ₹90 minimum-remaining-balance rule. */
+function getPaymentLimit(loan: Loan): PaymentLimit {
+  const totalDueAmount = parseFloat(loan.TotalDueAmount    || '0') || 0;
+  const pendingLoanAmt = parseFloat(loan.PendingLoanAmount || '0') || 0;
+  const noticeAmount   = parseFloat(loan.NoticeAmount      || '0') || 0;
+  const otherCharges   = parseFloat(loan.OtherCharges      || '0') || 0;
+  const totalCharges   = noticeAmount + otherCharges;
+
+  // Max payable: TotalDue - 90 (or PendingLoan - 90 when TotalDue = 0)
+  const effectiveCeiling = totalDueAmount > 0 ? totalDueAmount : pendingLoanAmt;
+  const maxPayable = effectiveCeiling - MIN_REMAINING_BALANCE;
+
+  // Payments must be >= ₹100 gross with the net in multiples of ₹10. If even the
+  // smallest such payment would breach the floor, the loan can't be paid online.
+  const payableOnline =
+    maxPayable >= 0 && floorToNearest(maxPayable, ROUND_TO) + totalCharges >= MIN_TRANSACTION;
+
+  return { maxPayable, payableOnline };
+}
+
+/** Returns an error message when the amount breaks the ₹90 rule, otherwise null. */
+function checkPaymentLimit(loan: Loan, paymentAmount: number, netAmount: number): string | null {
+  const { maxPayable, payableOnline } = getPaymentLimit(loan);
+  if (!payableOnline) {
+    return BRANCH_ONLY_MESSAGE;
+  }
+
+  const totalDueAmount = parseFloat(loan.TotalDueAmount || '0') || 0;
+  const blockExactTotal = totalDueAmount > 0 && paymentAmount === totalDueAmount;
+  if (netAmount > maxPayable || blockExactTotal) {
+    return `You can pay ₹${maxPayable.toLocaleString('en-IN')} maximum`;
+  }
+  return null;
 }
 
 function fail(
@@ -63,12 +117,17 @@ export class PaymentCalculator {
     const otherCharges   = parseFloat(loan.OtherCharges   || '0') || 0;
     const intAmount      = parseFloat(loan.IntAmount      || '0') || 0;
     const intDueDays     = parseFloat(loan.IntDuedays     || '0') || 0;
-    const totalDueAmount = parseFloat(loan.TotalDueAmount || '0') || 0;
     const minIntdays     = parseInt(loan.MinIntdays       || '0') || 0;
-    const pendingLoanAmt = parseFloat(loan.PendingLoanAmount || '0') || 0;
     const totalCharges   = noticeAmount + otherCharges;
 
     let payingAmountFloat = paymentAmount - totalCharges;
+
+    // ₹90 minimum-remaining-balance rule — same check as the strict gate, so the
+    // Pay button is never enabled for an amount that would be refused.
+    const limitError = checkPaymentLimit(loan, paymentAmount, payingAmountFloat);
+    if (limitError) {
+      return { instruction: limitError, isPayable: false };
+    }
 
     // Non-blocking MinIntdays warning (old app shows message but doesn't block)
     let minIntdaysWarning: string | undefined;
@@ -93,11 +152,7 @@ export class PaymentCalculator {
           : `You are paying ${payingIntDays} days interest on this loan`;
         return { instruction, isPayable: true, minIntdaysWarning };
       } else {
-        // Paying more than full interest
-        const effectiveCeiling = totalDueAmount > 0 ? totalDueAmount : pendingLoanAmt;
-        if (payingAmountFloat > effectiveCeiling) {
-          return { instruction: 'You cannot pay more than the total due amount.', isPayable: false };
-        }
+        // Paying more than full interest (upper limit already enforced by checkPaymentLimit)
         const principalAdjustment = payingAmountFloat - intAmount;
         const instruction = totalCharges > 0
           ? `You are paying ${intDueDays} days interest + ₹${principalAdjustment.toLocaleString('en-IN')} adjusted to principal + ₹${totalCharges.toLocaleString('en-IN')} charges`
@@ -125,7 +180,6 @@ export class PaymentCalculator {
     const intAmount      = parseFloat(loan.IntAmount      || '0') || 0;
     const intDueDays     = parseFloat(loan.IntDuedays     || '0') || 0;
     const payFrequency   = parseFloat(loan.PayFrequency   || '0') || 0;
-    const totalDueAmount = parseFloat(loan.TotalDueAmount || '0') || 0;
     const minIntdays     = parseInt(loan.MinIntdays       || '0') || 0;
 
     const totalCharges = noticeAmount + otherCharges;
@@ -152,16 +206,11 @@ export class PaymentCalculator {
       return fail('This loan is under auction. Please contact branch.', { totalCharges, netAmount, roundedTotal: paymentAmount });
     }
 
-    // Max payable: TotalDue - 90 (or PendingLoan - 90 when TotalDue = 0)
-    const pendingLoanAmount = parseFloat(loan.PendingLoanAmount || '0') || 0;
-    const effectiveCeiling = totalDueAmount > 0 ? totalDueAmount : pendingLoanAmount;
-    const maxPayable = effectiveCeiling - 90;
-    const blockExactTotal = totalDueAmount > 0 && paymentAmount === totalDueAmount;
-    if (maxPayable > 0 && (netAmount > maxPayable || blockExactTotal)) {
-      return fail(
-        `You can pay ₹${maxPayable.toLocaleString('en-IN')} maximum`,
-        { totalCharges, netAmount, roundedTotal: paymentAmount },
-      );
+    // ₹90 minimum-remaining-balance rule. Previously skipped when the balance was
+    // already <= ₹90, which let customers close the loan online.
+    const limitError = checkPaymentLimit(loan, paymentAmount, netAmount);
+    if (limitError) {
+      return fail(limitError, { totalCharges, netAmount, roundedTotal: paymentAmount });
     }
 
     // No interest days — pure principal, allow if above checks pass
@@ -257,13 +306,19 @@ export class PaymentCalculator {
     const totalDueAmount = parseFloat(loan.TotalDueAmount || '0') || 0;
     const totalCharges   = noticeAmount + otherCharges;
 
+    // A suggestion that breaks the ₹90 rule is hidden (0) rather than clamped,
+    // because a clamped amount can land off a valid interest band.
+    const { maxPayable, payableOnline } = getPaymentLimit(loan);
+    const withinLimit = (gross: number): number =>
+      payableOnline && gross - totalCharges <= maxPayable ? gross : 0;
+
     if (intDueDays <= 0) {
       const pendingAmt = parseFloat(loan.PendingLoanAmount || '0') || 0;
       const effectiveCeil = totalDueAmount > 0 ? totalDueAmount : pendingAmt;
-      const half = ceilToNearest(Math.floor((effectiveCeil - 90) / 2), ROUND_TO);
+      const half = ceilToNearest(Math.floor((effectiveCeil - MIN_REMAINING_BALANCE) / 2), ROUND_TO);
       return {
-        lower: Math.max(totalCharges + MIN_TRANSACTION, MIN_TRANSACTION),
-        upper: Math.max(half, MIN_TRANSACTION),
+        lower: withinLimit(Math.max(totalCharges + MIN_TRANSACTION, MIN_TRANSACTION)),
+        upper: withinLimit(Math.max(half, MIN_TRANSACTION)),
         totalDue: totalDueAmount,
       };
     }
@@ -274,14 +329,16 @@ export class PaymentCalculator {
     const lower = ceilToNearest(Math.round(halfDays   * interestPerDay), ROUND_TO) + totalCharges;
     const upper = ceilToNearest(Math.round(intDueDays * interestPerDay), ROUND_TO) + totalCharges;
 
-    const pendingLoanAmt = parseFloat(loan.PendingLoanAmount || '0') || 0;
-    const effectiveCeiling = totalDueAmount > 0 ? totalDueAmount : pendingLoanAmt;
-
     return {
-      lower: Math.max(lower, MIN_TRANSACTION),
-      upper: Math.min(upper, effectiveCeiling - 90),
+      lower: withinLimit(Math.max(lower, MIN_TRANSACTION)),
+      upper: withinLimit(upper),
       totalDue: totalDueAmount,
     };
+  }
+
+  /** The ₹90-rule limit for a loan, for UI hints and disabling payment. */
+  static getPaymentLimit(loan: Loan): PaymentLimit {
+    return getPaymentLimit(loan);
   }
 }
 

@@ -16,8 +16,6 @@ import { useMyLoans } from '@/hooks';
 import type { Loan } from '@/types';
 import { useState } from 'react';
 
-type Tab = 'open' | 'closed';
-
 function parseSafe(val: string | number | undefined): number {
   if (!val || val === '-') return 0;
   const n = parseFloat(String(val));
@@ -27,13 +25,11 @@ function parseSafe(val: string | number | undefined): number {
 export default function LoansIndexScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<Tab>('open');
   const [refreshing, setRefreshing] = useState(false);
+  // useMyLoans only ever returns outstanding loans — closed loans are not shown in the app.
   const { data: loans, isLoading, error, refetch } = useMyLoans();
 
-  const openLoans = loans?.filter((l: Loan) => l.LoanStatus === 'Open') ?? [];
-  const closedLoans = loans?.filter((l: Loan) => l.LoanStatus === 'Closed') ?? [];
-  const displayed = activeTab === 'open' ? openLoans : closedLoans;
+  const openLoans = loans ?? [];
 
   const totalGoldWeight = openLoans.reduce((s: number, l: Loan) => {
     const w = parseFloat(String(l.GrossWeight ?? '0').replace(/[^0-9.]/g, ''));
@@ -60,18 +56,8 @@ export default function LoansIndexScreen() {
       {/* Summary Strip */}
       <View style={styles.summaryStrip}>
         <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{loans?.length ?? 0}  </Text>
-          <Text style={styles.summaryLabel}>{t('loansIndex.total') + ' '}</Text>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
           <Text style={[styles.summaryValue, { color: '#2E7D32' }]}>{openLoans.length}</Text>
           <Text style={styles.summaryLabel}>{t('loansIndex.active') + ' '}</Text>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryValue}>{closedLoans.length}  </Text>
-          <Text style={styles.summaryLabel}>{t('loansIndex.closed') + ' '}</Text>
         </View>
         <View style={styles.summaryDivider} />
         <View style={styles.summaryItem}>
@@ -80,38 +66,6 @@ export default function LoansIndexScreen() {
           </Text>
           <Text style={styles.summaryLabel}>{t('loansIndex.goldActive') + ' '}</Text>
         </View>
-      </View>
-
-      {/* Tab Switcher */}
-      <View style={styles.tabRow}>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'open' && styles.tabActive]}
-          onPress={() => setActiveTab('open')}
-          activeOpacity={0.8}
-        >
-          <Ionicons
-            name="trending-up"
-            size={14}
-            color={activeTab === 'open' ? colors.primary.dark : colors.neutral[400]}
-          />
-          <Text style={[styles.tabText, activeTab === 'open' && styles.tabTextActive]}>
-            {t('loansIndex.active') + ' '} ({openLoans.length})
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, activeTab === 'closed' && styles.tabActive]}
-          onPress={() => setActiveTab('closed')}
-          activeOpacity={0.8}
-        >
-          <Ionicons
-            name="checkmark-circle"
-            size={14}
-            color={activeTab === 'closed' ? colors.primary.dark : colors.neutral[400]}
-          />
-          <Text style={[styles.tabText, activeTab === 'closed' && styles.tabTextActive]}>
-            {t('loansIndex.closed') + ' '} ({closedLoans.length})
-          </Text>
-        </TouchableOpacity>
       </View>
 
       {isLoading ? (
@@ -140,21 +94,14 @@ export default function LoansIndexScreen() {
             />
           }
         >
-          {displayed.length === 0 ? (
+          {openLoans.length === 0 ? (
             <View style={styles.emptyWrap}>
               <Ionicons name="folder-open-outline" size={48} color={colors.neutral[300]} />
-              <Text style={styles.emptyTitle}>
-                {activeTab === 'open' ? t('loansIndex.noActiveLoans') + ' ' : t('loansIndex.noClosedLoans') + ' '}  
-              </Text>
-              <Text style={styles.emptySubtitle}>
-                {activeTab === 'open'
-                  ? t('loansIndex.noActiveSubtitle') + ' '
-                  : t('loansIndex.noClosedSubtitle') + ' '}
-              </Text>
+              <Text style={styles.emptyTitle}>{t('loansIndex.noActiveLoans') + ' '}  </Text>
+              <Text style={styles.emptySubtitle}>{t('loansIndex.noActiveSubtitle') + ' '}</Text>
             </View>
           ) : (
-            displayed.map((loan: Loan) => {
-              const isOpen = loan.LoanStatus === 'Open';
+            openLoans.map((loan: Loan) => {
               const loanAmt = parseSafe(loan.LoanAmount);
               const pending = parseSafe(loan.PendingLoanAmount);
               const interest = parseSafe(loan.IntAmount);
@@ -175,9 +122,9 @@ export default function LoansIndexScreen() {
                       <Text style={styles.branch}>{loan.BranchName ?? ''}</Text>
                     </View>
                     <View style={styles.cardHeaderRight}>
-                      <View style={[styles.badge, isOpen ? styles.badgeOpen : styles.badgeClosed]}>
-                        <Text style={[styles.badgeText, isOpen ? styles.badgeTextOpen : styles.badgeTextClosed]}>
-                          {isOpen ? t('loansIndex.statusOpen') + ' ' : t('loansIndex.statusClosed') + ' '}  
+                      <View style={[styles.badge, styles.badgeOpen]}>
+                        <Text style={[styles.badgeText, styles.badgeTextOpen]}>
+                          {t('loansIndex.statusOpen') + ' '}
                         </Text>
                       </View>
                       <Text style={styles.scheme}>{loan.Scheme ?? ''}  </Text>
@@ -192,35 +139,18 @@ export default function LoansIndexScreen() {
                       <Text style={styles.statLabel}>{t('loansIndex.loanAmount')}</Text>
                       <Text style={styles.statValue}>₹{loanAmt.toLocaleString('en-IN')}  </Text>
                     </View>
-                    {isOpen ? (
-                      <>
-                        <View style={styles.stat}>
-                          <Text style={styles.statLabel}>{t('loansIndex.pending')}</Text>
-                          <Text style={[styles.statValue, { color: colors.warning }]}>
-                            {pending > 0 ? `₹${pending.toLocaleString('en-IN')}` : '—'}
-                          </Text>
-                        </View>
-                        <View style={styles.stat}>
-                          <Text style={styles.statLabel}>{t('loansIndex.interest')}</Text>
-                          <Text style={styles.statValue}>
-                            {interest > 0 ? `₹${interest.toLocaleString('en-IN')}` : '—'}  
-                          </Text>
-                        </View>
-                      </>
-                    ) : (
-                      <>
-                        <View style={styles.stat}>
-                          <Text style={styles.statLabel}>{t('loansIndex.netPaid')}</Text>
-                          <Text style={[styles.statValue, { color: '#2E7D32' }]}>
-                            {loan.NetPaid ? `₹${loan.NetPaid}` : `₹${loanAmt.toLocaleString('en-IN')}`}
-                          </Text>
-                        </View>
-                        <View style={styles.stat}>
-                          <Text style={styles.statLabel}>{t('loansIndex.paidBy')}</Text>
-                          <Text style={styles.statValue}>{loan.PaidBy ?? '—'}  </Text>
-                        </View>
-                      </>
-                    )}
+                    <View style={styles.stat}>
+                      <Text style={styles.statLabel}>{t('loansIndex.pending')}</Text>
+                      <Text style={[styles.statValue, { color: colors.warning }]}>
+                        {pending > 0 ? `₹${pending.toLocaleString('en-IN')}` : '—'}
+                      </Text>
+                    </View>
+                    <View style={styles.stat}>
+                      <Text style={styles.statLabel}>{t('loansIndex.interest')}</Text>
+                      <Text style={styles.statValue}>
+                        {interest > 0 ? `₹${interest.toLocaleString('en-IN')}` : '—'}
+                      </Text>
+                    </View>
                   </View>
 
                   {/* Gold Row */}
@@ -250,22 +180,14 @@ export default function LoansIndexScreen() {
                     </View>
                   </View>
 
-                  {/* Pay button for open loans */}
-                  {isOpen ? (
-                    <TouchableOpacity
-                      style={styles.payBtn}
-                      onPress={() => router.push(`/payments/make-payment?loanId=${loan.ID}`)}
-                      activeOpacity={0.85}
-                    >
-                      <Ionicons name="card-outline" size={15} color={colors.white} />
-                      <Text style={styles.payBtnText}>{t('loansIndex.makePayment')}  </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <View style={styles.closedFooter}>
-                      <Ionicons name="checkmark-circle" size={14} color="#2E7D32" />
-                      <Text style={styles.closedFooterText}>{t('loansIndex.loanClosed')}  </Text>
-                    </View>
-                  )}
+                  <TouchableOpacity
+                    style={styles.payBtn}
+                    onPress={() => router.push(`/payments/make-payment?loanId=${loan.ID}`)}
+                    activeOpacity={0.85}
+                  >
+                    <Ionicons name="card-outline" size={15} color={colors.white} />
+                    <Text style={styles.payBtnText}>{t('loansIndex.makePayment')}  </Text>
+                  </TouchableOpacity>
                 </TouchableOpacity>
               );
             })
@@ -293,7 +215,7 @@ const styles = StyleSheet.create({
 
   summaryStrip: {
     flexDirection: 'row', alignItems: 'center',
-    marginHorizontal: spacing[5], marginVertical: spacing[3],
+    marginHorizontal: spacing[5], marginTop: spacing[3], marginBottom: spacing[4],
     backgroundColor: colors.primary.gold,
     borderRadius: 18, padding: spacing[4],
     shadowColor: colors.primary.gold,
@@ -303,16 +225,6 @@ const styles = StyleSheet.create({
   summaryValue: { fontSize: 16, fontWeight: '800', color: colors.white },
   summaryLabel: { fontSize: 10, color: 'rgba(255,255,255,0.75)', marginTop: 2 },
   summaryDivider: { width: 1, height: 28, backgroundColor: 'rgba(255,255,255,0.25)' },
-
-  tabRow: {
-    flexDirection: 'row', marginHorizontal: spacing[5],
-    backgroundColor: colors.neutral[100], borderRadius: 14,
-    padding: 4, marginBottom: spacing[4],
-  },
-  tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5, paddingVertical: spacing[2], borderRadius: 11 },
-  tabActive: { backgroundColor: colors.white, shadowColor: '#000', shadowOpacity: 0.08, shadowRadius: 4, shadowOffset: { width: 0, height: 2 }, elevation: 3 },
-  tabText: { fontSize: 13, fontWeight: '600', color: colors.neutral[400] },
-  tabTextActive: { color: colors.primary.dark },
 
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center', gap: spacing[3] },
   loadingText: { fontSize: 14, color: colors.neutral[500] },
@@ -338,10 +250,8 @@ const styles = StyleSheet.create({
   branch: { fontSize: 12, color: colors.neutral[400], marginTop: 2 },
   badge: { paddingHorizontal: spacing[2], paddingVertical: 3, borderRadius: 6 },
   badgeOpen: { backgroundColor: '#E8F5E9' },
-  badgeClosed: { backgroundColor: colors.neutral[100] },
   badgeText: { fontSize: 11, fontWeight: '700' },
   badgeTextOpen: { color: '#2E7D32' },
-  badgeTextClosed: { color: colors.neutral[600] },
   scheme: { fontSize: 11, color: colors.neutral[400] },
 
   divider: { height: 1, backgroundColor: '#F0EBD8', marginVertical: spacing[3] },
@@ -374,11 +284,4 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5,
   },
   payBtnText: { fontSize: 14, fontWeight: '700', color: colors.white },
-
-  closedFooter: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
-    gap: 5, paddingVertical: spacing[2],
-    backgroundColor: '#E8F5E9', borderRadius: 10,
-  },
-  closedFooterText: { fontSize: 13, fontWeight: '600', color: '#2E7D32' },
 });
