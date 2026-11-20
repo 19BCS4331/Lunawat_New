@@ -28,6 +28,8 @@ local.properties
 *.iml
 *.hprof
 .cxx/
+# Release build outputs (APK/AAB, baseline profiles, metadata)
+android/app/release/
 *.keystore
 !debug.keystore
 
