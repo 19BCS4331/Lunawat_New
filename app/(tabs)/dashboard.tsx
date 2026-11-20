@@ -119,7 +119,6 @@ export default function DashboardScreen() {
   //   (sum: number, l: Loan) => sum + parsePendingAmount(l.IntAmount),
   //   0,
   // );
-  const closedCount = loans?.filter((l: Loan) => l.LoanStatus === 'Closed')?.length ?? 0;
 
   const quickActions = [
     { id: 'pay', icon: 'card' as const, label: t('dashboard.payNow'), onPress: () => { haptics.light(); router.push('/payments/make-payment'); } },
@@ -202,11 +201,6 @@ export default function DashboardScreen() {
             <View style={styles.heroStat}>
               <Text style={styles.heroStatValue}>{openLoans.length}  </Text>
               <Text style={styles.heroStatLabel}>{t('dashboard.activeLoans')}  </Text>
-            </View>
-            <View style={styles.heroStatDivider} />
-            <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{closedCount}  </Text>
-              <Text style={styles.heroStatLabel}>{t('dashboard.closedLoans')}  </Text>
             </View>
             {/* <View style={styles.heroStatDivider} /> */}
             {/* <View style={styles.heroStat}>

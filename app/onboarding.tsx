@@ -44,7 +44,7 @@ const SLIDES: Slide[] = [
     id: '2',
     icon: 'document-text',
     title: 'Manage Your Loans',
-    body: 'Track all your active and closed loans in one place. View outstanding amounts, interest, and due dates effortlessly.',
+    body: 'Track all your active loans in one place. View outstanding amounts, interest, and due dates effortlessly.',
     iconBg: '',
     iconColor: '#4CAF50',
     lottieSource: require('../assets/lottie/manage-loans.json'),
